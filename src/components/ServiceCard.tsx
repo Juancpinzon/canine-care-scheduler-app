@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useServiceStore } from '@/stores/useServiceStore';
 import { toast } from "sonner";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ServiceCardProps {
   id: number;
@@ -17,6 +18,7 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ id, name, description, basePrice, image, type }: ServiceCardProps) => {
   const setPrimaryService = useServiceStore(state => state.setPrimaryService);
+  const { t } = useLanguage();
 
   const handleSelect = () => {
     setPrimaryService(id, name);
@@ -35,13 +37,13 @@ const ServiceCard = ({ id, name, description, basePrice, image, type }: ServiceC
             className="h-full w-full object-cover"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            <p className="text-white font-semibold">{`Desde $${basePrice}`}</p>
+            <p className="text-white font-semibold">{`${t('from')} $${basePrice}`}</p>
           </div>
         </div>
       )}
       <CardHeader className={!image ? "pb-2" : "pb-2 pt-4"}>
         <CardTitle className="text-xl text-spawblue">{name}</CardTitle>
-        {!image && <p className="text-sm font-medium text-muted-foreground">{`Desde $${basePrice}`}</p>}
+        {!image && <p className="text-sm font-medium text-muted-foreground">{`${t('from')} $${basePrice}`}</p>}
       </CardHeader>
       <CardContent className="flex-grow">
         <CardDescription className="text-sm text-foreground/80">{description}</CardDescription>
@@ -49,7 +51,7 @@ const ServiceCard = ({ id, name, description, basePrice, image, type }: ServiceC
       <CardFooter>
         <Link to={`/service/${encodeURIComponent(type.toLowerCase().replace(' ', '-'))}`} className="w-full" onClick={handleSelect}>
           <Button variant="default" className="w-full bg-spawblue hover:bg-spawblue-dark flex items-center justify-center gap-2">
-            <span>Seleccionar</span>
+            <span>{t('select')}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </Link>

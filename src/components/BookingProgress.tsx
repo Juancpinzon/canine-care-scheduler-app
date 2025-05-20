@@ -1,16 +1,19 @@
 
 import { Check } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BookingProgressProps {
   currentStep: number;
 }
 
 const BookingProgress = ({ currentStep }: BookingProgressProps) => {
+  const { t } = useLanguage();
+  
   const steps = [
-    { number: 1, title: "Servicio" },
-    { number: 2, title: "Mascota" },
-    { number: 3, title: "Fecha y hora" },
-    { number: 4, title: "Pago" }
+    { number: 1, title: t("step1") },
+    { number: 2, title: t("step2") },
+    { number: 3, title: t("step3") },
+    { number: 4, title: t("step4") }
   ];
 
   return (

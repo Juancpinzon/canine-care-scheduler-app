@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { useServiceStore } from '@/stores/useServiceStore';
 import { Service } from '@/data/services';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AddonServiceItemProps {
   service: Service;
@@ -11,6 +12,7 @@ interface AddonServiceItemProps {
 const AddonServiceItem = ({ service }: AddonServiceItemProps) => {
   const [isChecked, setIsChecked] = useState(false);
   const toggleAddOn = useServiceStore(state => state.toggleAddOn);
+  const { t } = useLanguage();
 
   const handleChange = (checked: boolean) => {
     setIsChecked(checked);

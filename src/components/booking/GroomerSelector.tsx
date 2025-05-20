@@ -1,5 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Groomer {
   id: number;
@@ -13,15 +14,17 @@ interface GroomerSelectorProps {
 }
 
 const GroomerSelector = ({ groomers, selectedGroomer, onGroomerChange }: GroomerSelectorProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div>
-      <h2 className="text-lg font-medium mb-4">Peluquero preferido</h2>
+      <h2 className="text-lg font-medium mb-4">{t('preferredGroomer')}</h2>
       <Select value={selectedGroomer} onValueChange={onGroomerChange}>
         <SelectTrigger className="w-full mb-6">
-          <SelectValue placeholder="Selecciona un peluquero (opcional)" />
+          <SelectValue placeholder={`${t('preferredGroomer')} (${t('optional')})`} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="any">Cualquiera disponible</SelectItem>
+          <SelectItem value="any">{t('anyAvailable')}</SelectItem>
           {groomers.map((g) => (
             <SelectItem key={g.id} value={g.id.toString()}>
               {g.name}

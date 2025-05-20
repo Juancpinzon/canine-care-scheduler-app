@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { format, addDays, isWeekend, isSunday } from "date-fns";
 import { es } from "date-fns/locale";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DateSelectorProps {
   selectedDate: Date | undefined;
@@ -10,16 +11,18 @@ interface DateSelectorProps {
 }
 
 const DateSelector = ({ selectedDate, onDateChange }: DateSelectorProps) => {
+  const { t, language } = useLanguage();
+  
   return (
     <div>
-      <h2 className="text-lg font-medium mb-4">Selecciona una fecha</h2>
+      <h2 className="text-lg font-medium mb-4">{t('selectDate')}</h2>
       <div className="mb-6">
         <Calendar
           mode="single"
           selected={selectedDate}
           onSelect={onDateChange}
           className="rounded-md border mx-auto pointer-events-auto"
-          locale={es}
+          locale={language === 'es' ? es : undefined}
           disabled={(date) => {
             // Disable past dates, today, and Sundays
             const today = new Date();

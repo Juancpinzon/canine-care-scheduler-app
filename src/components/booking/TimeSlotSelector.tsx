@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface TimeSlotSelectorProps {
   date: Date | undefined;
@@ -17,12 +18,14 @@ const TimeSlotSelector = ({
   selectedTimeSlot, 
   onTimeSlotChange 
 }: TimeSlotSelectorProps) => {
+  const { t, language } = useLanguage();
+  
   if (!date) return null;
   
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">
-        Horarios disponibles para el {format(date, "d 'de' MMMM", { locale: es })}
+        {t('availableTimesFor')} {format(date, "d 'de' MMMM", { locale: language === 'es' ? es : undefined })}
       </h2>
       
       {availableTimeSlots.length > 0 ? (
@@ -45,7 +48,7 @@ const TimeSlotSelector = ({
         </RadioGroup>
       ) : (
         <div className="text-center py-4 mb-6">
-          <p className="text-red-500">No hay horarios disponibles para esta fecha. Por favor, selecciona otra fecha.</p>
+          <p className="text-red-500">{t('noTimesAvailable')}</p>
         </div>
       )}
     </div>
