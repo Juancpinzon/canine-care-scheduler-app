@@ -35,13 +35,13 @@ const ServiceCard = ({ id, name, description, basePrice, image, type }: ServiceC
             className="h-full w-full object-cover"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            <p className="text-white font-semibold">{`Desde ${basePrice} €`}</p>
+            <p className="text-white font-semibold">{`Desde $${basePrice}`}</p>
           </div>
         </div>
       )}
       <CardHeader className={!image ? "pb-2" : "pb-2 pt-4"}>
         <CardTitle className="text-xl text-spawblue">{name}</CardTitle>
-        {!image && <p className="text-sm font-medium text-muted-foreground">{`Desde ${basePrice} €`}</p>}
+        {!image && <p className="text-sm font-medium text-muted-foreground">{`Desde $${basePrice}`}</p>}
       </CardHeader>
       <CardContent className="flex-grow">
         <CardDescription className="text-sm text-foreground/80">{description}</CardDescription>

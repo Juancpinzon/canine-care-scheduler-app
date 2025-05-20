@@ -37,7 +37,7 @@ const AddonServiceItem = ({ service }: AddonServiceItemProps) => {
         </div>
       </div>
       <div className="text-sm font-semibold">
-        {service.basePrice} €
+        ${service.basePrice}
         {service.name === 'De-Matting' || service.name === 'Hand Scissoring' ? 
           <span className="text-xs text-muted-foreground">/min</span> : null
         }

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from "@/components/Layout";
 import BookingProgress from "@/components/BookingProgress";
@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { format } from "date-fns";
+import { format, addDays, isWeekend, isSunday } from "date-fns";
 import { es } from "date-fns/locale";
 import { useServiceStore } from '@/stores/useServiceStore';
 import { toast } from "sonner";
@@ -20,12 +20,32 @@ const SelectDateTime = () => {
   const navigate = useNavigate();
   const { primaryService, petInfo, appointment, setAppointmentInfo, getTotalPrice } = useServiceStore();
   
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [timeSlot, setTimeSlot] = useState<string>("");
-  const [groomer, setGroomer] = useState<string>("any");
+  const [date, setDate] = useState<Date | undefined>(appointment.date || addDays(new Date(), 1));
+  const [timeSlot, setTimeSlot] = useState<string>(appointment.timeSlot || "");
+  const [groomer, setGroomer] = useState<string>(appointment.groomerId ? String(appointment.groomerId) : "any");
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([]);
 
-  // Mock time slots data (in a real app this would come from an API based on the selected date)
-  const timeSlots = ["10:00", "11:30", "13:00", "14:30", "16:00", "17:30"];
+  // Mock time slots based on selected date
+  useEffect(() => {
+    if (!date) return;
+    
+    // Different time slots for weekends vs weekdays
+    let slots = [];
+    if (isWeekend(date) && !isSunday(date)) {
+      // Saturday hours
+      slots = ["09:00", "10:30", "12:00", "13:30", "15:00"];
+    } else if (!isSunday(date)) {
+      // Weekday hours
+      slots = ["10:00", "11:30", "13:00", "14:30", "16:00", "17:30"];
+    }
+    
+    setAvailableTimeSlots(slots);
+    
+    // Clear selected time if it's not available on the new date
+    if (timeSlot && !slots.includes(timeSlot)) {
+      setTimeSlot("");
+    }
+  }, [date, timeSlot]);
 
   // Mock groomers data
   const groomers = [
@@ -94,17 +114,19 @@ const SelectDateTime = () => {
                       mode="single"
                       selected={date}
                       onSelect={setDate}
-                      className="rounded-md border mx-auto"
+                      className="rounded-md border mx-auto pointer-events-auto"
                       locale={es}
                       disabled={(date) => {
-                        // Disable past dates and Sundays (0)
-                        return date < new Date() || date.getDay() === 0;
+                        // Disable past dates, today, and Sundays
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        return date < addDays(today, 1) || date.getDay() === 0;
                       }}
                     />
                   </div>
                 </div>
                 
-                {date && (
+                {date && availableTimeSlots.length > 0 && (
                   <div>
                     <h2 className="text-lg font-medium mb-4">
                       Horarios disponibles para el {format(date, "d 'de' MMMM", { locale: es })}
@@ -115,7 +137,7 @@ const SelectDateTime = () => {
                       onValueChange={setTimeSlot}
                       className="grid grid-cols-3 gap-3 mb-6"
                     >
-                      {timeSlots.map((time) => (
+                      {availableTimeSlots.map((time) => (
                         <div key={time} className="flex items-center">
                           <RadioGroupItem value={time} id={`time-${time}`} className="peer sr-only" />
                           <Label
@@ -127,6 +149,12 @@ const SelectDateTime = () => {
                         </div>
                       ))}
                     </RadioGroup>
+                  </div>
+                )}
+                
+                {date && availableTimeSlots.length === 0 && (
+                  <div className="text-center py-4 mb-6">
+                    <p className="text-red-500">No hay horarios disponibles para esta fecha. Por favor, selecciona otra fecha.</p>
                   </div>
                 )}
                 
@@ -213,7 +241,7 @@ const SelectDateTime = () => {
                   
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Precio Total</h3>
-                    <p className="text-2xl font-bold">{getTotalPrice()} €</p>
+                    <p className="text-2xl font-bold">${getTotalPrice()}</p>
                   </div>
                 </div>
               </CardContent>

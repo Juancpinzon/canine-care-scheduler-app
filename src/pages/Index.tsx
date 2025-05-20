@@ -1,21 +1,38 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ServiceCard from "@/components/ServiceCard";
 import AddonServiceItem from "@/components/AddonServiceItem";
 import { services, addOnServices } from "@/data/services";
+import { useServiceStore } from '@/stores/useServiceStore';
+import { toast } from "sonner";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("services");
+  const navigate = useNavigate();
+  const resetSelections = useServiceStore(state => state.resetSelections);
+  
+  const handleReserveNow = () => {
+    resetSelections();
+    toast.success("Selecciona un servicio para continuar");
+    document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleAboutUs = () => {
+    toast("Sobre nosotros", {
+      description: "La información sobre nuestro negocio estará disponible pronto.",
+    });
+  };
 
   return (
     <Layout>
       <div className="max-w-screen-xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-spawblue mb-4">S-PAW GROOMING</h1>
-          <p className="text-xl text-gray-600 mb-6">Servicios profesionales de peluquería canina</p>
+          <h1 className="text-4xl font-bold text-spawblue mb-4">Q4PAWS GROOMING</h1>
+          <p className="text-xl text-gray-600 mb-6">Servicios profesionales de peluquería canina en Kissimmee, Florida</p>
           <div className="w-16 h-1 bg-spawgreen mx-auto"></div>
         </div>
 
@@ -32,21 +49,22 @@ const Index = () => {
               </p>
               <div className="flex gap-4">
                 <a href="#servicios">
-                  <Button variant="default" size="lg" className="bg-spawblue hover:bg-spawblue-dark">
+                  <Button variant="default" size="lg" className="bg-spawblue hover:bg-spawblue-dark" onClick={handleReserveNow}>
                     Ver Servicios
                   </Button>
                 </a>
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" onClick={handleAboutUs}>
                   Sobre Nosotros
                 </Button>
               </div>
             </div>
             <div className="bg-gray-100 min-h-[300px] flex items-center justify-center">
               <div className="text-center p-8">
-                <div className="w-32 h-32 bg-spawblue/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-slow">
-                  <span className="text-spawblue text-4xl font-bold">DOG</span>
-                </div>
-                <p className="text-gray-600 italic">Imagen ilustrativa del perro</p>
+                <img 
+                  src="/lovable-uploads/2979fa22-f52e-43e0-a7db-c2ec1817391f.png" 
+                  alt="Q4PAWS Logo" 
+                  className="w-48 h-auto mx-auto mb-4"
+                />
               </div>
             </div>
           </div>
@@ -128,7 +146,12 @@ const Index = () => {
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Reserva ahora una cita para tu mascota y déjanos encargarnos de su cuidado con nuestros servicios profesionales.
           </p>
-          <Button variant="default" size="lg" className="bg-spawgreen hover:bg-spawgreen-dark">
+          <Button 
+            variant="default" 
+            size="lg" 
+            className="bg-spawgreen hover:bg-spawgreen-dark"
+            onClick={handleReserveNow}
+          >
             Reservar Ahora
           </Button>
         </div>
