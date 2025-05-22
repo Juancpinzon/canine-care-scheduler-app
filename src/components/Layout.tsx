@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showNavigation = true }) => {
         <div className="container flex items-center justify-between py-4 px-4 md:px-6">
           <Link to="/" className="flex items-center space-x-2">
             <img 
-              src="/lovable-uploads/0656d71a-feb3-40ad-8983-d5cfee6fc324.png" 
+              src="public/lovable-uploads/logo.png" 
               alt="Q4PAWS Logo" 
               className="h-10 w-auto"
             />
