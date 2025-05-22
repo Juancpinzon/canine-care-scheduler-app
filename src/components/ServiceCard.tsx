@@ -30,20 +30,21 @@ const ServiceCard = ({ id, name, description, basePrice, image, type }: ServiceC
   return (
     <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg">
       {image && (
-        <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+        <div className="relative h-64 w-full overflow-hidden rounded-t-lg">
           <img 
             src={image} 
             alt={name} 
             className="h-full w-full object-cover"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            <p className="text-white font-semibold">{`${t('from')} $${basePrice}`}</p>
+            <p className="text-white font-semibold">{`${name} - ${t('from')} $${basePrice}`}</p>
           </div>
         </div>
       )}
       <CardHeader className={!image ? "pb-2" : "pb-2 pt-4"}>
-        <CardTitle className="text-xl text-spawblue">{name}</CardTitle>
-        {!image && <p className="text-sm font-medium text-muted-foreground">{`${t('from')} $${basePrice}`}</p>}
+        <CardTitle className="text-xl text-spawblue">
+          {name} <span className="text-sm font-medium text-muted-foreground ml-2">{`${t('from')} $${basePrice}`}</span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
         <CardDescription className="text-sm text-foreground/80">{description}</CardDescription>
