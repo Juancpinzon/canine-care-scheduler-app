@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { translations } from '../i18n/translations';
-import { Translate } from "lucide-react";
+import { Globe } from "lucide-react";
 
 type LanguageContextType = {
   language: string;
@@ -55,7 +55,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
         className="flex items-center gap-1 py-1 px-2 text-sm rounded-md hover:bg-gray-100"
         aria-label={language === 'en' ? 'Cambiar a español' : 'Switch to English'}
       >
-        <Translate className="h-4 w-4" />
+        <Globe className="h-4 w-4" />
         <span>{language === 'en' ? 'ES' : 'EN'}</span>
       </button>
     );
