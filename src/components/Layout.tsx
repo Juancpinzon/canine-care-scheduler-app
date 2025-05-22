@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,7 +12,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, showNavigation = true }) => {
   const { toast } = useToast();
-  const { t, language, changeLanguage } = useLanguage();
+  const { t, LanguageToggle } = useLanguage();
 
   const handleLogin = () => {
     toast({
@@ -34,22 +33,16 @@ const Layout: React.FC<LayoutProps> = ({ children, showNavigation = true }) => {
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="container flex items-center justify-between py-4 px-4 md:px-6">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-full bg-spawblue flex items-center justify-center text-white font-bold text-xl">
-              Q
-            </div>
+            <img 
+              src="/lovable-uploads/0656d71a-feb3-40ad-8983-d5cfee6fc324.png" 
+              alt="Q4PAWS Logo" 
+              className="h-10 w-auto"
+            />
             <span className="font-bold text-xl text-spawblue hidden md:inline">{t('appName')}</span>
           </Link>
 
           <div className="flex items-center gap-4">
-            <Select value={language} onValueChange={changeLanguage}>
-              <SelectTrigger className="w-[90px]">
-                <SelectValue placeholder="Language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="es">Español</SelectItem>
-              </SelectContent>
-            </Select>
+            <LanguageToggle />
             <Button variant="ghost" onClick={handleLogin}>
               {t('login')}
             </Button>
@@ -69,7 +62,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showNavigation = true }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="font-semibold text-spawblue mb-3">{t('appName')}</h3>
-              <p className="text-gray-600 text-sm">La mejor peluquería canina con servicios profesionales para tu mascota.</p>
+              <p className="text-gray-600 text-sm">{t('language') === 'en' ? 'The best dog grooming with professional services for your pet.' : 'La mejor peluquería canina con servicios profesionales para tu mascota.'}</p>
             </div>
             <div>
               <h3 className="font-semibold mb-3">{t('quickLinks')}</h3>
