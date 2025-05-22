@@ -23,7 +23,7 @@ export const services: Service[] = [
     basePrice: 50,
     serviceType: "Full Groom",
     durationMinutes: 120,
-    image: "/lovable-uploads/2979fa22-f52e-43e0-a7db-c2ec1817391f.png"
+    image: "/lovable-uploads/gris-negro-blanco.jpg"
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ export const services: Service[] = [
     basePrice: 35,
     serviceType: "Minigroom",
     durationMinutes: 60,
-    image: "/lovable-uploads/2979fa22-f52e-43e0-a7db-c2ec1817391f.png"
+    image: "/lovable-uploads/pequines.jpg"
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ export const services: Service[] = [
     basePrice: 40,
     serviceType: "Luxury Bath",
     durationMinutes: 90,
-    image: "/lovable-uploads/2979fa22-f52e-43e0-a7db-c2ec1817391f.png"
+    image: "/lovable-uploads/perro-blanco.jpg"
   }
 ];
 
