@@ -12,10 +12,12 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Service, services, getPriceByPetAttributes } from "@/data/services";
 import { DogSize, CoatType, useServiceStore } from '@/stores/useServiceStore';
 import { toast } from "sonner";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ServiceDetails = () => {
   const { serviceType } = useParams<{ serviceType: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const [service, setService] = useState<Service | null>(null);
   const [size, setSize] = useState<DogSize>('Medium');
@@ -56,8 +58,8 @@ const ServiceDetails = () => {
 
   const handleContinue = () => {
     setPetInfo({ size, coat });
-    toast.success("Información guardada", {
-      description: "Continúa eligiendo o registrando tu mascota"
+    toast.success(t('information_saved'), {
+      description: t('continue_selecting_pet')
     });
     navigate('/select-pet');
   };
@@ -66,10 +68,10 @@ const ServiceDetails = () => {
     return (
       <Layout>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold">Servicio no encontrado</h2>
+          <h2 className="text-2xl font-bold">{t('service_not_found')}</h2>
           <p className="mt-4">
             <Link to="/" className="text-spawblue hover:underline">
-              Volver al inicio
+              {t('back')} {t('home')}
             </Link>
           </p>
         </div>
@@ -85,7 +87,7 @@ const ServiceDetails = () => {
         <div className="flex items-center mb-6">
           <Link to="/" className="text-spawblue hover:text-spawblue-dark flex items-center">
             <ArrowLeft className="h-4 w-4 mr-1" />
-            <span>Volver</span>
+            <span>{t('back')}</span>
           </Link>
           <h1 className="text-2xl font-bold text-center flex-1">{service.name}</h1>
           <div className="w-20"></div> {/* For balancing the layout */}
@@ -104,16 +106,16 @@ const ServiceDetails = () => {
             )}
             
             <div>
-              <h2 className="text-lg font-semibold mb-2">Descripción</h2>
+              <h2 className="text-lg font-semibold mb-2">{t('description')}</h2>
               <p className="text-gray-600 mb-6">{service.description}</p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-muted p-4 rounded-md">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Duración aproximada</h3>
-                  <p className="font-semibold">{service.durationMinutes} minutos</p>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('approximate_duration')}</h3>
+                  <p className="font-semibold">{service.durationMinutes} {t('minutes')}</p>
                 </div>
                 <div className="bg-muted p-4 rounded-md">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Precio base</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('base_price')}</h3>
                   <p className="font-semibold">{service.basePrice} €</p>
                 </div>
               </div>
@@ -122,14 +124,14 @@ const ServiceDetails = () => {
               
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-semibold mb-4">Personaliza para tu mascota</h2>
+                  <h2 className="text-lg font-semibold mb-4">{t('customize_for_your_pet')}</h2>
                   <p className="text-gray-600 mb-4">
-                    El precio final dependerá del tamaño y tipo de pelaje de tu mascota.
+                    {t('price_depends_on_size')}
                   </p>
                 </div>
                 
                 <div>
-                  <h3 className="text-md font-medium mb-3">Tamaño del perro</h3>
+                  <h3 className="text-md font-medium mb-3">{t('dog_size')}</h3>
                   <RadioGroup
                     defaultValue="Medium"
                     value={size}
@@ -151,7 +153,7 @@ const ServiceDetails = () => {
                 </div>
                 
                 <div>
-                  <h3 className="text-md font-medium mb-3">Tipo de pelaje</h3>
+                  <h3 className="text-md font-medium mb-3">{t('coat_type')}</h3>
                   <RadioGroup
                     defaultValue="Flat"
                     value={coat}
@@ -172,9 +174,9 @@ const ServiceDetails = () => {
                   </RadioGroup>
                   
                   <div className="bg-spawblue/10 p-3 rounded-md mt-3 text-xs">
-                    <p><strong>Flat:</strong> Pelo corto y liso (Labrador, Beagle)</p>
-                    <p><strong>Coiled:</strong> Pelo rizado o con ondas (Caniche, Bichón)</p>
-                    <p><strong>Double:</strong> Doble capa de pelo (Pastor Alemán, Husky)</p>
+                    <p><strong>Flat:</strong> {t('flat_coat_description')}</p>
+                    <p><strong>Coiled:</strong> {t('coiled_coat_description')}</p>
+                    <p><strong>Double:</strong> {t('double_coat_description')}</p>
                   </div>
                 </div>
               </div>
@@ -183,14 +185,14 @@ const ServiceDetails = () => {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Precio calculado</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">{t('calculated_price')}</h3>
                   <p className="text-2xl font-bold">{price} €</p>
                 </div>
                 <Button
                   onClick={handleContinue}
                   className="bg-spawblue hover:bg-spawblue-dark flex items-center gap-2"
                 >
-                  Continuar
+                  {t('continue')}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>

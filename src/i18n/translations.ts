@@ -15,6 +15,9 @@ export const translations: Translations = {
     "continue": "Continue",
     "confirm": "Confirm",
     "optional": "optional",
+    "description": "Description",
+    "minutes": "minutes",
+    "language": "en",
     
     // Navigation
     "login": "Log In",
@@ -37,6 +40,19 @@ export const translations: Translations = {
     "walkIn": "Walk-In Services",
     "addOn": "Add-On Services",
     "from": "From",
+    "service_not_found": "Service not found",
+    "approximate_duration": "Approximate duration",
+    "base_price": "Base price",
+    "customize_for_your_pet": "Customize for your pet",
+    "price_depends_on_size": "The final price will depend on the size and coat type of your pet.",
+    "dog_size": "Dog size",
+    "coat_type": "Coat type",
+    "flat_coat_description": "Short and smooth coat (Labrador, Beagle)",
+    "coiled_coat_description": "Curly or wavy coat (Poodle, Bichon)",
+    "double_coat_description": "Double coat (German Shepherd, Husky)",
+    "calculated_price": "Calculated price",
+    "information_saved": "Information saved",
+    "continue_selecting_pet": "Continue by selecting or registering your pet",
     
     // Pet Selection
     "selectPet": "Select Your Pet",
@@ -102,6 +118,9 @@ export const translations: Translations = {
     "continue": "Continuar",
     "confirm": "Confirmar",
     "optional": "opcional",
+    "description": "Descripción",
+    "minutes": "minutos",
+    "language": "es",
     
     // Navigation
     "login": "Iniciar Sesión",
@@ -124,6 +143,19 @@ export const translations: Translations = {
     "walkIn": "Servicios sin Cita",
     "addOn": "Servicios Adicionales",
     "from": "Desde",
+    "service_not_found": "Servicio no encontrado",
+    "approximate_duration": "Duración aproximada",
+    "base_price": "Precio base",
+    "customize_for_your_pet": "Personaliza para tu mascota",
+    "price_depends_on_size": "El precio final dependerá del tamaño y tipo de pelaje de tu mascota.",
+    "dog_size": "Tamaño del perro",
+    "coat_type": "Tipo de pelaje",
+    "flat_coat_description": "Pelo corto y liso (Labrador, Beagle)",
+    "coiled_coat_description": "Pelo rizado o con ondas (Caniche, Bichón)",
+    "double_coat_description": "Doble capa de pelo (Pastor Alemán, Husky)",
+    "calculated_price": "Precio calculado",
+    "information_saved": "Información guardada",
+    "continue_selecting_pet": "Continúa eligiendo o registrando tu mascota",
     
     // Pet Selection
     "selectPet": "Selecciona tu Mascota",
