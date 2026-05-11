@@ -2,6 +2,98 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { Appointment, AppointmentStatus, AppointmentWithRelations } from '@/types'
 
+// Compress image to max maxMB using canvas (quality-step approach)
+async function compressImage(file: File, maxMB: number): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onerror = reject
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onerror = reject
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        let { width, height } = img
+        const maxPx = 1920
+        if (width > maxPx || height > maxPx) {
+          if (width > height) {
+            height = Math.round((height * maxPx) / width)
+            width = maxPx
+          } else {
+            width = Math.round((width * maxPx) / height)
+            height = maxPx
+          }
+        }
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        if (!ctx) { reject(new Error('Canvas no disponible')); return }
+        ctx.drawImage(img, 0, 0, width, height)
+
+        const maxBytes = maxMB * 1024 * 1024
+        let quality = 0.88
+
+        function tryCompress() {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) { reject(new Error('Compresión fallida')); return }
+              if (blob.size <= maxBytes || quality <= 0.3) {
+                resolve(blob)
+              } else {
+                quality -= 0.1
+                tryCompress()
+              }
+            },
+            'image/jpeg',
+            quality,
+          )
+        }
+        tryCompress()
+      }
+      img.src = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+export function useUpdateAppointmentPhotos() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      appointmentId,
+      type,
+      file,
+    }: {
+      appointmentId: string
+      type: 'before' | 'after'
+      file: File
+    }): Promise<string> => {
+      const compressed = await compressImage(file, 1)
+      const path = `${appointmentId}/${type}.jpg`
+
+      const { error: uploadError } = await supabase.storage
+        .from('appointment-photos')
+        .upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('appointment-photos')
+        .getPublicUrl(path)
+
+      const field = type === 'before' ? 'before_photo_url' : 'after_photo_url'
+      const { error: updateError } = await supabase
+        .from('appointments')
+        .update({ [field]: publicUrl })
+        .eq('id', appointmentId)
+      if (updateError) throw updateError
+
+      return publicUrl
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] })
+    },
+  })
+}
+
 interface AppointmentFilters {
   date?: string
   status?: AppointmentStatus

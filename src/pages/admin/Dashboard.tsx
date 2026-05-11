@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useAppointments, useUpdateAppointmentStatus } from '@/hooks/useAppointments'
 import { NewAppointmentModal } from '@/components/admin/NewAppointmentModal'
+import { AppointmentDetailPanel } from '@/components/admin/AppointmentDetailPanel'
 import type { AppointmentStatus, AppointmentWithRelations } from '@/types'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
@@ -154,12 +155,14 @@ function AppointmentCard({
   const [expanded, setExpanded] = useState(false)
   const actions = getActions(appt.status)
   const hasActions = actions.length > 0
+  const hasDetailPanel = appt.status === 'in_progress' || appt.status === 'completed'
+  const isExpandable = hasActions || hasDetailPanel
 
   return (
     <div
       style={{
         background: C.surface,
-        border: `1px solid ${C.goldBorder}`,
+        border: `1px solid ${expanded ? 'rgba(201,168,76,0.25)' : C.goldBorder}`,
         borderRadius: 12,
         overflow: 'hidden',
         transition: 'border-color 0.2s',
@@ -167,11 +170,11 @@ function AppointmentCard({
     >
       {/* Main row */}
       <div
-        onClick={() => hasActions && setExpanded(e => !e)}
+        onClick={() => isExpandable && setExpanded(e => !e)}
         style={{
           display: 'flex',
           alignItems: 'stretch',
-          cursor: hasActions ? 'pointer' : 'default',
+          cursor: isExpandable ? 'pointer' : 'default',
           padding: '0',
         }}
       >
@@ -282,10 +285,22 @@ function AppointmentCard({
               {formatPrice(appt.price_charged_usd)}
             </span>
           </div>
+
+          {/* Photo indicator when photos exist */}
+          {hasDetailPanel && (appt.before_photo_url || appt.after_photo_url) && (
+            <div style={{ display: 'flex', gap: 4, marginTop: 2 }}>
+              {appt.before_photo_url && (
+                <span style={{ color: C.gold, fontSize: 11 }}>📷 Antes</span>
+              )}
+              {appt.after_photo_url && (
+                <span style={{ color: C.gold, fontSize: 11 }}>📷 Después</span>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Expand hint (mobile) */}
-        {hasActions && (
+        {/* Expand hint */}
+        {isExpandable && (
           <div
             style={{
               display: 'flex',
@@ -301,54 +316,56 @@ function AppointmentCard({
         )}
       </div>
 
-      {/* Action buttons */}
-      {hasActions && (
-        <div
-          style={{
-            borderTop: `1px solid ${C.subtleBorder}`,
-            padding: '12px 16px',
-            display: 'flex',
-            gap: 8,
-            flexWrap: 'wrap',
-            background: '#0A0A0A',
-            // On desktop always show; on mobile show only when expanded
-            // We handle this via CSS via a data attribute — here we always render
-            // but toggle visibility with max-height animation
-            maxHeight: expanded || window.innerWidth >= 768 ? '200px' : '0px',
-            overflow: 'hidden',
-            transition: 'max-height 0.2s ease',
-          }}
-        >
-          {actions.map(action => (
-            <button
-              key={action.newStatus}
-              onClick={e => {
-                e.stopPropagation()
-                onStatusChange(appt, action.newStatus)
-              }}
-              disabled={loading}
+      {/* Expanded section: actions + detail panel */}
+      {isExpandable && expanded && (
+        <>
+          {/* Action buttons */}
+          {hasActions && (
+            <div
               style={{
-                background: action.bg,
-                border: `1px solid ${action.color}30`,
-                borderRadius: 8,
-                padding: '10px 16px',
-                color: action.color,
-                fontSize: 13,
-                fontWeight: 500,
-                cursor: loading ? 'not-allowed' : 'pointer',
-                opacity: loading ? 0.6 : 1,
-                fontFamily: 'DM Sans, sans-serif',
-                height: 40,
-                transition: 'opacity 0.15s',
-                whiteSpace: 'nowrap',
-                flex: '1 1 auto',
-                minWidth: 90,
+                borderTop: `1px solid ${C.subtleBorder}`,
+                padding: '12px 16px',
+                display: 'flex',
+                gap: 8,
+                flexWrap: 'wrap',
+                background: '#0A0A0A',
               }}
             >
-              {action.label}
-            </button>
-          ))}
-        </div>
+              {actions.map(action => (
+                <button
+                  key={action.newStatus}
+                  onClick={e => {
+                    e.stopPropagation()
+                    onStatusChange(appt, action.newStatus)
+                  }}
+                  disabled={loading}
+                  style={{
+                    background: action.bg,
+                    border: `1px solid ${action.color}30`,
+                    borderRadius: 8,
+                    padding: '10px 16px',
+                    color: action.color,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    opacity: loading ? 0.6 : 1,
+                    fontFamily: 'DM Sans, sans-serif',
+                    height: 44,
+                    transition: 'opacity 0.15s',
+                    whiteSpace: 'nowrap',
+                    flex: '1 1 auto',
+                    minWidth: 90,
+                  }}
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Photos + groomer notes panel */}
+          {hasDetailPanel && <AppointmentDetailPanel appt={appt} />}
+        </>
       )}
     </div>
   )

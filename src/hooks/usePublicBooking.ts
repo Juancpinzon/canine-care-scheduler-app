@@ -2,6 +2,9 @@ import { useMutation } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { DogSize, DogSex, Service } from '@/types'
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string
+
 export interface PublicBookingPayload {
   ownerName: string
   ownerEmail: string
@@ -87,7 +90,19 @@ export function usePublicBooking() {
         .single()
       if (apptErr) throw apptErr
 
-      return { appointmentId: (appt as { id: string }).id }
+      const appointmentId = (appt as { id: string }).id
+
+      // Fire-and-forget: send confirmation email via Edge Function
+      fetch(`${SUPABASE_URL}/functions/v1/send-confirmation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ appointment_id: appointmentId }),
+      }).catch(e => console.warn('send-confirmation call failed:', e))
+
+      return { appointmentId }
     },
   })
 }
