@@ -13,10 +13,15 @@ import SelectDateTime from "./pages/SelectDateTime";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
+import Horarios from "./pages/admin/Horarios";
+import Reports from "./pages/admin/Reports";
+import AdminLayout from "./components/admin/AdminLayout";
 import Reservar from "./pages/public/Reservar";
+import Registro from "./pages/Registro";
 import MisCitas from "./pages/client/MisCitas";
 import MisPerros from "./pages/client/MisPerros";
 import Perfil from "./pages/client/Perfil";
+import Servicios from "./pages/admin/Servicios";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +40,11 @@ const App = () => (
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/reservar" element={<Reservar />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+            <Route path="/admin/horarios" element={<AdminLayout><Horarios /></AdminLayout>} />
+            <Route path="/admin/reportes" element={<AdminLayout><Reports /></AdminLayout>} />
+            <Route path="/admin/servicios" element={<AdminLayout><Servicios /></AdminLayout>} />
             <Route path="/mis-citas" element={<MisCitas />} />
             <Route path="/mis-perros" element={<MisPerros />} />
             <Route path="/perfil" element={<Perfil />} />

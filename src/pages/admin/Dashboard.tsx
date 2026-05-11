@@ -496,7 +496,22 @@ export default function AdminDashboard() {
               fontFamily: 'DM Sans, sans-serif',
             }}
           >
-            ↻ Actualizar
+             ↻ Actualizar
+          </button>
+          <button
+            onClick={() => navigate('/admin/reportes')}
+            style={{
+              background: 'transparent',
+              border: `1px solid ${C.goldBorder}`,
+              borderRadius: 8,
+              padding: '8px 12px',
+              color: C.gold,
+              fontSize: 13,
+              cursor: 'pointer',
+              fontFamily: 'DM Sans, sans-serif',
+            }}
+          >
+            📊 Reportes
           </button>
           <button
             onClick={() => setShowModal(true)}
