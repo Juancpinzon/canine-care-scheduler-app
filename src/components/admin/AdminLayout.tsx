@@ -7,6 +7,7 @@ import {
   Users,
   PawPrint,
   Scissors,
+  Image as ImageIcon,
   Clock,
   BarChart3,
   LogOut,
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { path: '/admin/clientes',   label: 'Clientes',   Icon: Users },
   { path: '/admin/mascotas',   label: 'Mascotas',   Icon: PawPrint },
   { path: '/admin/servicios',  label: 'Servicios',  Icon: Scissors },
+  { path: '/admin/galeria',    label: 'Galería',    Icon: ImageIcon },
   { path: '/admin/horarios',   label: 'Horarios',   Icon: Clock },
   { path: '/admin/reportes',   label: 'Reportes',   Icon: BarChart3 },
 ]

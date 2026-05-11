@@ -105,6 +105,15 @@ export interface AppointmentStatusHistory {
   created_at: string
 }
 
+export interface GalleryPhoto {
+  id: string
+  photo_url: string
+  caption: string | null
+  is_visible: boolean
+  sort_order: number
+  created_at: string
+}
+
 export interface AppointmentWithRelations extends Appointment {
   dog: Pick<Dog, 'name' | 'breed' | 'size'>
   client: Pick<Profile, 'full_name' | 'phone'>

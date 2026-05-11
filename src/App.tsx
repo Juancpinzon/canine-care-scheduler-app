@@ -22,6 +22,7 @@ import MisCitas from "./pages/client/MisCitas";
 import MisPerros from "./pages/client/MisPerros";
 import Perfil from "./pages/client/Perfil";
 import Servicios from "./pages/admin/Servicios";
+import AdminGaleria from "./pages/admin/Galeria";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/admin/horarios" element={<AdminLayout><Horarios /></AdminLayout>} />
             <Route path="/admin/reportes" element={<AdminLayout><Reports /></AdminLayout>} />
             <Route path="/admin/servicios" element={<AdminLayout><Servicios /></AdminLayout>} />
+            <Route path="/admin/galeria" element={<AdminLayout><AdminGaleria /></AdminLayout>} />
             <Route path="/mis-citas" element={<MisCitas />} />
             <Route path="/mis-perros" element={<MisPerros />} />
             <Route path="/perfil" element={<Perfil />} />

@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useGalleryPhotos } from "@/hooks/useGallery";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -61,6 +64,84 @@ export default function LandingPage() {
     { n: "5 ★", l: "Calificación" },
     { n: "100%", l: "Con amor" },
   ];
+
+  function GallerySection() {
+    const { data: photos = [], isLoading } = useGalleryPhotos(false);
+    const [index, setIndex] = useState(-1);
+
+    if (isLoading || photos.length === 0) return null;
+
+    return (
+      <section id="galeria" style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
+        <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: "#C9A84C", textAlign: "center", margin: "0 0 16px" }}>
+          Galería
+        </p>
+        <h3 className="q4-serif" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 300, textAlign: "center", lineHeight: 1.15, margin: "0 0 72px" }}>
+          Nuestro Trabajo
+        </h3>
+
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", 
+          gap: 16 
+        }}>
+          {photos.map((photo, i) => (
+            <div 
+              key={photo.id}
+              onClick={() => setIndex(i)}
+              style={{ 
+                position: "relative", 
+                paddingTop: "100%", 
+                cursor: "pointer",
+                overflow: "hidden",
+                background: "#0C0C0C",
+                border: "1px solid rgba(201,168,76,0.15)"
+              }}
+              className="q4-card"
+            >
+              <img 
+                src={photo.photo_url} 
+                alt={photo.caption || ""} 
+                style={{ 
+                  position: "absolute", 
+                  top: 0, 
+                  left: 0, 
+                  width: "100%", 
+                  height: "100%", 
+                  objectFit: "cover",
+                  transition: "transform 0.5s ease"
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              />
+              {photo.caption && (
+                <div style={{ 
+                  position: "absolute", 
+                  bottom: 0, 
+                  left: 0, 
+                  right: 0, 
+                  padding: "20px", 
+                  background: "linear-gradient(transparent, rgba(0,0,0,0.8))",
+                  color: "#F0EDE8",
+                  fontSize: 12,
+                  fontFamily: "DM Sans, sans-serif"
+                }}>
+                  {photo.caption}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <Lightbox
+          index={index}
+          open={index >= 0}
+          close={() => setIndex(-1)}
+          slides={photos.map(p => ({ src: p.photo_url, title: p.caption || undefined }))}
+        />
+      </section>
+    );
+  }
 
   return (
     <>
@@ -495,6 +576,9 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+
+        {/* GALLERY */}
+        <GallerySection />
 
         {/* CTA */}
         <section style={{ position: "relative", padding: "120px 24px", textAlign: "center", borderTop: "1px solid rgba(240,237,232,0.06)", overflow: "hidden" }}>
