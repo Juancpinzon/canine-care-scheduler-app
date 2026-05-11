@@ -11,6 +11,9 @@ import ServiceDetails from "./pages/ServiceDetails";
 import SelectPet from "./pages/SelectPet";
 import SelectDateTime from "./pages/SelectDateTime";
 import Checkout from "./pages/Checkout";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
+import Reservar from "./pages/public/Reservar";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +30,9 @@ const App = () => (
             <Route path="/select-pet" element={<SelectPet />} />
             <Route path="/select-datetime" element={<SelectDateTime />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/reservar" element={<Reservar />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
