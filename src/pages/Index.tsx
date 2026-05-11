@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
@@ -85,48 +86,107 @@ export default function LandingPage() {
         .q4-d4 { animation-delay: 0.44s; }
         @keyframes q4in { to { opacity:1; transform:translateY(0); } }
         .q4-glow { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 110%, rgba(201,168,76,0.07) 0%, transparent 65%); pointer-events:none; }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .q4-nav-padding { padding: 16px 20px !important; }
-          .q4-nav-desktop { display: none !important; }
-          .q4-nav-mobile-btn { display: flex !important; }
-          .q4-hero { padding-top: 48px !important; padding-left: 20px !important; padding-right: 20px !important; }
-          .q4-logo-text { font-size: 18px !important; }
-          .q4-logo-sub { display: none; }
-          .q4-btn-res-mobile { padding: 12px 20px !important; font-size: 11px !important; flex: 1; text-align: center; }
+
+        /* NAV */
+        .q4-nav { padding: 28px 48px; }
+        .q4-logo-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(240,237,232,0.35); margin: 4px 0 0; }
+        .q4-nav-desktop-links { display: flex; gap: 32px; align-items: center; }
+        .q4-nav-reservar-desktop { display: flex; }
+        .q4-nav-hamburger { display: none; }
+
+        /* HERO */
+        .q4-hero { padding: 120px 48px 100px; }
+
+        /* HERO BUTTONS */
+        .q4-hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 100px; }
+        .q4-hero-btn-primary {
+          background: #C9A84C; color: #080808; border: none;
+          padding: 13px 34px; font-size: 11px; letter-spacing: 0.12em;
+          text-transform: uppercase; cursor: pointer; font-weight: 500;
+          transition: opacity 0.2s ease, transform 0.15s ease;
         }
-        @media (min-width: 769px) {
-          .q4-nav-mobile-btn { display: none !important; }
-          .q4-hero { padding-top: 80px !important; }
-          .q4-nav-padding { padding: 28px 48px !important; }
+        .q4-hero-btn-primary:hover { opacity: 0.88; transform: scale(1.01); }
+        .q4-hero-btn-secondary {
+          background: transparent; color: rgba(240,237,232,0.55);
+          border: 1px solid rgba(240,237,232,0.18);
+          padding: 13px 28px; font-size: 11px; letter-spacing: 0.1em;
+          text-transform: uppercase; cursor: pointer;
+          transition: border-color 0.2s ease, color 0.2s ease;
         }
-        
-        .q4-mobile-drawer {
+        .q4-hero-btn-secondary:hover { border-color: rgba(240,237,232,0.4); color: rgba(240,237,232,0.8); }
+
+        /* MOBILE MENU DROPDOWN */
+        .q4-mobile-menu {
           position: fixed;
-          inset: 0;
+          top: 65px;
+          left: 0;
+          right: 0;
           background: #080808;
+          border-bottom: 1px solid rgba(201,168,76,0.45);
           z-index: 100;
           display: flex;
           flex-direction: column;
-          padding: 40px 24px;
-          gap: 24px;
-          transform: translateY(-100%);
-          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 0 24px;
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
         }
-        .q4-mobile-drawer.open {
-          transform: translateY(0);
+        .q4-mobile-menu.open {
+          max-height: 420px;
+          padding: 20px 24px 28px;
+        }
+
+        /* FOOTER */
+        .q4-footer-inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+
+        @media (max-width: 767px) {
+          /* NAV mobile */
+          .q4-nav { padding: 16px 20px; }
+          .q4-logo-sub { display: none; }
+          .q4-nav-desktop-links { display: none; }
+          .q4-nav-reservar-desktop { display: none; }
+          .q4-nav-hamburger { display: flex; }
+
+          /* HERO mobile */
+          .q4-hero { padding: 48px 20px 80px; }
+
+          /* HERO BUTTONS mobile — full width stacked */
+          .q4-hero-btns { flex-direction: column; gap: 12px; }
+          .q4-hero-btn-primary {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 13px;
+            text-align: center;
+          }
+          .q4-hero-btn-secondary {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 13px;
+            text-align: center;
+          }
+
+          /* FOOTER mobile */
+          .q4-footer-inner { gap: 16px; }
         }
       `}</style>
 
       <div className="q4-root q4-sans">
-        {/* MOBILE MENU */}
-        <div className={`q4-mobile-drawer ${isMenuOpen ? "open" : ""}`}>
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
-            <button onClick={() => setIsMenuOpen(false)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-              <X size={32} color="#C9A84C" />
-            </button>
-          </div>
+
+        {/* BACKDROP — close menu on click outside */}
+        {isMenuOpen && (
+          <div
+            onClick={() => setIsMenuOpen(false)}
+            style={{ position: "fixed", inset: 0, zIndex: 99 }}
+          />
+        )}
+
+        {/* MOBILE DROPDOWN MENU */}
+        <div className={`q4-mobile-menu ${isMenuOpen ? "open" : ""}`}>
           {[
             { l: "Servicios", id: "servicios" },
             { l: "Precios", id: "precios" },
@@ -137,50 +197,67 @@ export default function LandingPage() {
               onClick={() => scrollTo(x.id)}
               className="q4-serif"
               style={{
-                fontSize: 32,
+                fontSize: 28,
                 textAlign: "left",
                 color: "#F0EDE8",
                 background: "none",
                 border: "none",
+                borderBottom: "1px solid rgba(240,237,232,0.07)",
                 cursor: "pointer",
-                padding: "10px 0"
+                padding: "14px 0",
+                minHeight: 56,
               }}
             >
               {x.l}
             </button>
           ))}
-          <div style={{ marginTop: "auto", borderTop: "1px solid rgba(240,237,232,0.1)", paddingTop: 40 }}>
-            <button
-              onClick={() => { navigate("/reservar"); setIsMenuOpen(false); }}
-              style={{
-                width: "100%",
-                background: "#C9A84C",
-                color: "#080808",
-                border: "none",
-                padding: "18px",
-                fontSize: 14,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                fontWeight: 600
-              }}
-            >
-              Reservar ahora
-            </button>
-          </div>
+          <button
+            onClick={() => { navigate("/reservar"); setIsMenuOpen(false); }}
+            style={{
+              marginTop: 20,
+              width: "100%",
+              minHeight: 56,
+              background: "#C9A84C",
+              color: "#080808",
+              border: "none",
+              padding: "16px",
+              fontSize: 13,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Reservar ahora
+          </button>
         </div>
 
         {/* NAV */}
-        <nav className="q4-nav-padding" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(240,237,232,0.06)" }}>
+        <nav
+          className="q4-nav"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: "1px solid rgba(240,237,232,0.06)",
+            position: "relative",
+            zIndex: 101,
+          }}
+        >
+          {/* LOGO */}
           <div>
-            <h1 className="q4-serif q4-logo-text" style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#C9A84C", margin: 0 }}>
+            <h1
+              className="q4-serif"
+              style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#C9A84C", margin: 0 }}
+            >
               Q4 PAWS
             </h1>
-            <p className="q4-logo-sub" style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(240,237,232,0.35)", margin: "4px 0 0" }}>
-              Dog Grooming · Kissimmee, FL
-            </p>
+            <p className="q4-logo-sub">Dog Grooming · Kissimmee, FL</p>
           </div>
-          <div style={{ display: "flex", gap: 24, alignItems: "center", flex: 1, justifyContent: "flex-end" }}>
-            <div className="q4-nav-desktop" style={{ gap: 32, alignItems: "center" }}>
+
+          {/* DESKTOP LINKS + RESERVAR */}
+          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+            <div className="q4-nav-desktop-links">
               {[
                 { l: "Servicios", id: "servicios" },
                 { l: "Precios", id: "precios" },
@@ -204,34 +281,44 @@ export default function LandingPage() {
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => navigate("/reservar")}
-              className="q4-btn-res-mobile"
-              style={{
-                border: "1px solid #C9A84C",
-                color: "#C9A84C",
-                background: "transparent",
-                padding: "9px 22px",
-                fontSize: 10,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-              }}
-            >
-              Reservar
-            </button>
-            <button
-              className="q4-nav-mobile-btn"
-              onClick={() => setIsMenuOpen(true)}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
-            >
-              <Menu size={24} color="#C9A84C" />
-            </button>
+            <div className="q4-nav-reservar-desktop">
+              <button
+                onClick={() => navigate("/reservar")}
+                style={{
+                  border: "1px solid #C9A84C",
+                  color: "#C9A84C",
+                  background: "transparent",
+                  padding: "9px 22px",
+                  fontSize: 10,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                }}
+              >
+                Reservar
+              </button>
+            </div>
           </div>
+
+          {/* HAMBURGER — mobile only */}
+          <button
+            className="q4-nav-hamburger"
+            onClick={() => setIsMenuOpen((v) => !v)}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 0, alignItems: "center" }}
+            aria-label="Menú"
+          >
+            {isMenuOpen
+              ? <X size={24} color="#C9A84C" />
+              : <Menu size={24} color="#C9A84C" />
+            }
+          </button>
         </nav>
 
         {/* HERO */}
-        <section className="q4-hero" style={{ position: "relative", padding: "120px 48px 100px", textAlign: "center", overflow: "hidden" }}>
+        <section
+          className="q4-hero"
+          style={{ position: "relative", textAlign: "center", overflow: "hidden" }}
+        >
           <div className="q4-glow" />
 
           <div className="q4-paw" style={{ position: "absolute", right: "8%", top: "50%", opacity: 0.06 }}>
@@ -243,53 +330,56 @@ export default function LandingPage() {
             </svg>
           </div>
 
-          <div className="q4-reveal q4-d1" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 18px", border: "1px solid rgba(201,168,76,0.3)", borderRadius: 999, marginBottom: 40 }}>
+          <div
+            className="q4-reveal q4-d1"
+            style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 18px", border: "1px solid rgba(201,168,76,0.3)", borderRadius: 999, marginBottom: 40 }}
+          >
             <span style={{ width: 6, height: 6, borderRadius: 999, background: "#C9A84C" }} />
             <span style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C9A84C" }}>
               Peluquería canina de lujo
             </span>
           </div>
 
-          <h2 className="q4-serif q4-reveal q4-d2" style={{ fontSize: "clamp(38px, 7vw, 92px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 32px", letterSpacing: "-0.01em" }}>
+          <h2
+            className="q4-serif q4-reveal q4-d2"
+            style={{
+              fontSize: "clamp(36px, 8vw, 72px)",
+              fontWeight: 300,
+              lineHeight: 1.05,
+              margin: "0 0 32px",
+              letterSpacing: "-0.01em",
+            }}
+          >
             Tu perro merece
             <br />
             <em style={{ color: "#C9A84C", fontWeight: 400 }}>lo extraordinario</em>
           </h2>
 
-          <p className="q4-reveal q4-d3" style={{ fontSize: 16, fontWeight: 300, lineHeight: 1.7, color: "rgba(240,237,232,0.6)", maxWidth: "100%", width: 540, margin: "0 auto 48px", whiteSpace: "pre-line" }}>
+          <p
+            className="q4-reveal q4-d3"
+            style={{
+              fontSize: 16,
+              fontWeight: 300,
+              lineHeight: 1.7,
+              color: "rgba(240,237,232,0.6)",
+              maxWidth: 540,
+              margin: "0 auto 48px",
+              whiteSpace: "pre-line",
+            }}
+          >
             {"Servicios de grooming premium en Kissimmee.\nReserva en minutos — sin llamadas, sin esperas."}
           </p>
 
-          <div className="q4-reveal q4-d4" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 100 }}>
+          <div className="q4-reveal q4-d4 q4-hero-btns">
             <button
               onClick={() => navigate("/reservar")}
-              className="q4-btn-gold"
-              style={{
-                background: "#C9A84C",
-                color: "#080808",
-                border: "none",
-                padding: "13px 34px",
-                fontSize: 11,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                fontWeight: 500,
-              }}
+              className="q4-hero-btn-primary"
             >
               Reservar cita ahora
             </button>
             <button
               onClick={() => scrollTo("servicios")}
-              style={{
-                background: "transparent",
-                color: "rgba(240,237,232,0.55)",
-                border: "1px solid rgba(240,237,232,0.18)",
-                padding: "13px 28px",
-                fontSize: 11,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-              }}
+              className="q4-hero-btn-secondary"
             >
               Ver servicios
             </button>
@@ -443,28 +533,35 @@ export default function LandingPage() {
         </section>
 
         {/* FOOTER */}
-        <footer style={{ padding: "48px 24px", textAlign: "center", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
-          <h4 className="q4-serif" style={{ fontSize: 18, fontWeight: 400, letterSpacing: "0.2em", color: "#C9A84C", margin: "0 0 12px" }}>
-            Q4 PAWS
-          </h4>
-          <p style={{ fontSize: 11, letterSpacing: "0.05em", color: "rgba(240,237,232,0.35)", margin: "0 0 24px" }}>
-            q4pawsdg@gmail.com · +1 321-318-87-60 · @q4paws · Kissimmee, FL
-          </p>
-          <button
-            onClick={() => navigate("/login")}
-            style={{
-              background: "none",
-              border: "none",
-              color: "rgba(201,168,76,0.3)",
-              fontSize: 10,
-              letterSpacing: "0.05em",
-              cursor: "pointer",
-              textTransform: "uppercase"
-            }}
-          >
-            Acceso administrador
-          </button>
+        <footer style={{ padding: "48px 24px", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
+          <div className="q4-footer-inner" style={{ textAlign: "center" }}>
+            <h4
+              className="q4-serif"
+              style={{ fontSize: 18, fontWeight: 400, letterSpacing: "0.2em", color: "#C9A84C", margin: 0 }}
+            >
+              Q4 PAWS
+            </h4>
+            <p style={{ fontSize: 11, letterSpacing: "0.05em", color: "rgba(240,237,232,0.35)", margin: 0 }}>
+              q4pawsdg@gmail.com · +1 321-318-87-60 · @q4paws · Kissimmee, FL
+            </p>
+            <button
+              onClick={() => navigate("/login")}
+              style={{
+                background: "none",
+                border: "none",
+                color: "rgba(201,168,76,0.3)",
+                fontSize: 10,
+                letterSpacing: "0.05em",
+                cursor: "pointer",
+                textTransform: "uppercase",
+                padding: 0,
+              }}
+            >
+              Acceso administrador
+            </button>
+          </div>
         </footer>
+
       </div>
     </>
   );

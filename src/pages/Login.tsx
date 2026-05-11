@@ -12,7 +12,7 @@ export default function Login() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate(isAdmin ? '/admin' : '/', { replace: true })
+      navigate(isAdmin ? '/admin' : '/mis-citas', { replace: true })
     }
   }, [isLoading, isAuthenticated, isAdmin, navigate])
 

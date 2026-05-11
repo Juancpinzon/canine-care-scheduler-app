@@ -14,6 +14,9 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import Reservar from "./pages/public/Reservar";
+import MisCitas from "./pages/client/MisCitas";
+import MisPerros from "./pages/client/MisPerros";
+import Perfil from "./pages/client/Perfil";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +36,9 @@ const App = () => (
             <Route path="/reservar" element={<Reservar />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/mis-citas" element={<MisCitas />} />
+            <Route path="/mis-perros" element={<MisPerros />} />
+            <Route path="/perfil" element={<Perfil />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
