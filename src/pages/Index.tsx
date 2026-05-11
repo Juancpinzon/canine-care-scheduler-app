@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const scrollTo = (id: string) =>
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setIsMenuOpen(false);
+  };
 
   const SERVICES = [
     {
@@ -80,44 +85,128 @@ export default function LandingPage() {
         .q4-d4 { animation-delay: 0.44s; }
         @keyframes q4in { to { opacity:1; transform:translateY(0); } }
         .q4-glow { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 110%, rgba(201,168,76,0.07) 0%, transparent 65%); pointer-events:none; }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .q4-nav-padding { padding: 16px 20px !important; }
+          .q4-nav-desktop { display: none !important; }
+          .q4-nav-mobile-btn { display: flex !important; }
+          .q4-hero { padding-top: 48px !important; padding-left: 20px !important; padding-right: 20px !important; }
+          .q4-logo-text { font-size: 18px !important; }
+          .q4-logo-sub { display: none; }
+          .q4-btn-res-mobile { padding: 12px 20px !important; font-size: 11px !important; flex: 1; text-align: center; }
+        }
+        @media (min-width: 769px) {
+          .q4-nav-mobile-btn { display: none !important; }
+          .q4-hero { padding-top: 80px !important; }
+          .q4-nav-padding { padding: 28px 48px !important; }
+        }
+        
+        .q4-mobile-drawer {
+          position: fixed;
+          inset: 0;
+          background: #080808;
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
+          padding: 40px 24px;
+          gap: 24px;
+          transform: translateY(-100%);
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .q4-mobile-drawer.open {
+          transform: translateY(0);
+        }
       `}</style>
 
       <div className="q4-root q4-sans">
+        {/* MOBILE MENU */}
+        <div className={`q4-mobile-drawer ${isMenuOpen ? "open" : ""}`}>
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+            <button onClick={() => setIsMenuOpen(false)} style={{ background: "none", border: "none", cursor: "pointer" }}>
+              <X size={32} color="#C9A84C" />
+            </button>
+          </div>
+          {[
+            { l: "Servicios", id: "servicios" },
+            { l: "Precios", id: "precios" },
+            { l: "Cómo funciona", id: "proceso" },
+          ].map((x) => (
+            <button
+              key={x.id}
+              onClick={() => scrollTo(x.id)}
+              className="q4-serif"
+              style={{
+                fontSize: 32,
+                textAlign: "left",
+                color: "#F0EDE8",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "10px 0"
+              }}
+            >
+              {x.l}
+            </button>
+          ))}
+          <div style={{ marginTop: "auto", borderTop: "1px solid rgba(240,237,232,0.1)", paddingTop: 40 }}>
+            <button
+              onClick={() => { navigate("/reservar"); setIsMenuOpen(false); }}
+              style={{
+                width: "100%",
+                background: "#C9A84C",
+                color: "#080808",
+                border: "none",
+                padding: "18px",
+                fontSize: 14,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                fontWeight: 600
+              }}
+            >
+              Reservar ahora
+            </button>
+          </div>
+        </div>
+
         {/* NAV */}
-        <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "28px 48px", borderBottom: "1px solid rgba(240,237,232,0.06)" }}>
+        <nav className="q4-nav-padding" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(240,237,232,0.06)" }}>
           <div>
-            <h1 className="q4-serif" style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#C9A84C", margin: 0 }}>
+            <h1 className="q4-serif q4-logo-text" style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#C9A84C", margin: 0 }}>
               Q4 PAWS
             </h1>
-            <p style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(240,237,232,0.35)", margin: "4px 0 0" }}>
+            <p className="q4-logo-sub" style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(240,237,232,0.35)", margin: "4px 0 0" }}>
               Dog Grooming · Kissimmee, FL
             </p>
           </div>
-          <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-            {[
-              { l: "Servicios", id: "servicios" },
-              { l: "Precios", id: "precios" },
-              { l: "Cómo funciona", id: "proceso" },
-            ].map((x) => (
-              <button
-                key={x.id}
-                onClick={() => scrollTo(x.id)}
-                className="q4-link"
-                style={{
-                  fontSize: 11,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "rgba(240,237,232,0.45)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {x.l}
-              </button>
-            ))}
+          <div style={{ display: "flex", gap: 24, alignItems: "center", flex: 1, justifyContent: "flex-end" }}>
+            <div className="q4-nav-desktop" style={{ gap: 32, alignItems: "center" }}>
+              {[
+                { l: "Servicios", id: "servicios" },
+                { l: "Precios", id: "precios" },
+                { l: "Cómo funciona", id: "proceso" },
+              ].map((x) => (
+                <button
+                  key={x.id}
+                  onClick={() => scrollTo(x.id)}
+                  className="q4-link"
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "rgba(240,237,232,0.45)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {x.l}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => navigate("/reservar")}
+              className="q4-btn-res-mobile"
               style={{
                 border: "1px solid #C9A84C",
                 color: "#C9A84C",
@@ -131,11 +220,18 @@ export default function LandingPage() {
             >
               Reservar
             </button>
+            <button
+              className="q4-nav-mobile-btn"
+              onClick={() => setIsMenuOpen(true)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+            >
+              <Menu size={24} color="#C9A84C" />
+            </button>
           </div>
         </nav>
 
         {/* HERO */}
-        <section style={{ position: "relative", padding: "120px 48px 100px", textAlign: "center", overflow: "hidden" }}>
+        <section className="q4-hero" style={{ position: "relative", padding: "120px 48px 100px", textAlign: "center", overflow: "hidden" }}>
           <div className="q4-glow" />
 
           <div className="q4-paw" style={{ position: "absolute", right: "8%", top: "50%", opacity: 0.06 }}>
@@ -154,13 +250,13 @@ export default function LandingPage() {
             </span>
           </div>
 
-          <h2 className="q4-serif q4-reveal q4-d2" style={{ fontSize: "clamp(48px, 7vw, 92px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 32px", letterSpacing: "-0.01em" }}>
+          <h2 className="q4-serif q4-reveal q4-d2" style={{ fontSize: "clamp(38px, 7vw, 92px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 32px", letterSpacing: "-0.01em" }}>
             Tu perro merece
             <br />
             <em style={{ color: "#C9A84C", fontWeight: 400 }}>lo extraordinario</em>
           </h2>
 
-          <p className="q4-reveal q4-d3" style={{ fontSize: 16, fontWeight: 300, lineHeight: 1.7, color: "rgba(240,237,232,0.6)", maxWidth: 540, margin: "0 auto 48px", whiteSpace: "pre-line" }}>
+          <p className="q4-reveal q4-d3" style={{ fontSize: 16, fontWeight: 300, lineHeight: 1.7, color: "rgba(240,237,232,0.6)", maxWidth: "100%", width: 540, margin: "0 auto 48px", whiteSpace: "pre-line" }}>
             {"Servicios de grooming premium en Kissimmee.\nReserva en minutos — sin llamadas, sin esperas."}
           </p>
 
@@ -199,7 +295,7 @@ export default function LandingPage() {
             </button>
           </div>
 
-          <div style={{ display: "flex", justifyContent: "center", gap: 64, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: "clamp(24px, 10vw, 64px)", flexWrap: "wrap" }}>
             {STATS.map((s) => (
               <div key={s.l} style={{ textAlign: "center" }}>
                 <p className="q4-serif" style={{ fontSize: 36, fontWeight: 400, color: "#C9A84C", margin: 0 }}>
@@ -214,7 +310,7 @@ export default function LandingPage() {
         </section>
 
         {/* SERVICES */}
-        <section id="servicios" style={{ padding: "100px 48px", maxWidth: 1200, margin: "0 auto" }}>
+        <section id="servicios" style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: "#C9A84C", textAlign: "center", margin: "0 0 16px" }}>
             Nuestros servicios
           </p>
@@ -262,7 +358,7 @@ export default function LandingPage() {
         </section>
 
         {/* ADD-ONS */}
-        <section style={{ padding: "60px 48px 100px", maxWidth: 1100, margin: "0 auto" }}>
+        <section style={{ padding: "60px 24px 100px", maxWidth: 1100, margin: "0 auto" }}>
           <p className="q4-serif" style={{ fontSize: 22, textAlign: "center", color: "rgba(240,237,232,0.7)", fontStyle: "italic", margin: "0 0 32px", fontWeight: 300 }}>
             Servicios adicionales
           </p>
@@ -286,7 +382,7 @@ export default function LandingPage() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section id="proceso" style={{ padding: "100px 48px", maxWidth: 1200, margin: "0 auto", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
+        <section id="proceso" style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
           <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: "#C9A84C", textAlign: "center", margin: "0 0 16px" }}>
             Proceso
           </p>
@@ -311,7 +407,7 @@ export default function LandingPage() {
         </section>
 
         {/* CTA */}
-        <section style={{ position: "relative", padding: "120px 48px", textAlign: "center", borderTop: "1px solid rgba(240,237,232,0.06)", overflow: "hidden" }}>
+        <section style={{ position: "relative", padding: "120px 24px", textAlign: "center", borderTop: "1px solid rgba(240,237,232,0.06)", overflow: "hidden" }}>
           <div className="q4-glow" />
           <div style={{ display: "inline-block", marginBottom: 32, opacity: 0.4 }}>
             <svg width="60" height="60" viewBox="0 0 100 100" fill="#C9A84C">
@@ -347,13 +443,27 @@ export default function LandingPage() {
         </section>
 
         {/* FOOTER */}
-        <footer style={{ padding: "48px", textAlign: "center", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
+        <footer style={{ padding: "48px 24px", textAlign: "center", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
           <h4 className="q4-serif" style={{ fontSize: 18, fontWeight: 400, letterSpacing: "0.2em", color: "#C9A84C", margin: "0 0 12px" }}>
             Q4 PAWS
           </h4>
-          <p style={{ fontSize: 11, letterSpacing: "0.05em", color: "rgba(240,237,232,0.35)", margin: 0 }}>
+          <p style={{ fontSize: 11, letterSpacing: "0.05em", color: "rgba(240,237,232,0.35)", margin: "0 0 24px" }}>
             q4pawsdg@gmail.com · +1 321-318-87-60 · @q4paws · Kissimmee, FL
           </p>
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              background: "none",
+              border: "none",
+              color: "rgba(201,168,76,0.3)",
+              fontSize: 10,
+              letterSpacing: "0.05em",
+              cursor: "pointer",
+              textTransform: "uppercase"
+            }}
+          >
+            Acceso administrador
+          </button>
         </footer>
       </div>
     </>
