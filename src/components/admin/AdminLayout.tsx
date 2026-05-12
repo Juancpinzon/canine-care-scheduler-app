@@ -152,15 +152,14 @@ export default function AdminLayout({ children }: Props) {
           </nav>
 
           <div style={{ padding: '0 20px', marginTop: 'auto', paddingBottom: 20 }}>
-            <a 
-              href="/" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <button 
+              onClick={() => navigate('/')}
               className="q4-admin-exit-link"
+              style={{ background: 'transparent', cursor: 'pointer' }}
             >
               <ExternalLink size={12} />
               Ver sitio
-            </a>
+            </button>
             <div className="q4-admin-separator">
               <button
                 onClick={handleSignOut}
@@ -213,16 +212,14 @@ export default function AdminLayout({ children }: Props) {
               </Link>
             )
           })}
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => navigate('/')}
             className="q4-admin-bottom-item"
             style={{ color: 'rgba(240,237,232,0.38)' }}
           >
             <ExternalLink size={18} strokeWidth={1.8} />
             Ver sitio
-          </a>
+          </button>
           <button
             onClick={handleSignOut}
             className="q4-admin-bottom-item"
