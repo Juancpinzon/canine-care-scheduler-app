@@ -373,12 +373,15 @@ function AppointmentCard({
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function AdminDashboard() {
-  const { isAdmin, isAuthenticated, isLoading, user } = useAuth()
-  const navigate = useNavigate()
+  const { user } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' })
+  const navigate = useNavigate()
+  const { data: appointments = [], isLoading: loadingAppts, refetch } = useAppointments({ date: today })
+  const updateStatus = useUpdateAppointmentStatus()
+
   const displayDate = new Date().toLocaleDateString('es-ES', {
     timeZone: 'America/New_York',
     weekday: 'long',
@@ -386,17 +389,6 @@ export default function AdminDashboard() {
     month: 'long',
     day: 'numeric',
   })
-
-  // Auth guard
-  useEffect(() => {
-    if (!isLoading) {
-      if (!isAuthenticated) navigate('/login', { replace: true })
-      else if (!isAdmin) navigate('/', { replace: true })
-    }
-  }, [isLoading, isAuthenticated, isAdmin, navigate])
-
-  const { data: appointments = [], isLoading: loadingAppts, refetch } = useAppointments({ date: today })
-  const updateStatus = useUpdateAppointmentStatus()
 
   // Summary stats — exclude cancelled & no_show from revenue
   const stats = useMemo(() => {
@@ -422,25 +414,6 @@ export default function AdminDashboard() {
       setUpdatingId(null)
     }
   }
-
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          background: C.bg,
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'DM Sans, sans-serif',
-        }}
-      >
-        <div style={{ color: C.gold, fontSize: 16 }}>Cargando...</div>
-      </div>
-    )
-  }
-
-  if (!isAuthenticated || !isAdmin) return null
 
   return (
     <div

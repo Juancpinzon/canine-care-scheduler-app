@@ -23,6 +23,10 @@ import MisPerros from "./pages/client/MisPerros";
 import Perfil from "./pages/client/Perfil";
 import Servicios from "./pages/admin/Servicios";
 import AdminGaleria from "./pages/admin/Galeria";
+import Calendario from "./pages/admin/Calendario";
+import Citas from "./pages/admin/Citas";
+import Clientes from "./pages/admin/Clientes";
+import Mascotas from "./pages/admin/Mascotas";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +47,10 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+            <Route path="/admin/calendario" element={<AdminLayout><Calendario /></AdminLayout>} />
+            <Route path="/admin/citas" element={<AdminLayout><Citas /></AdminLayout>} />
+            <Route path="/admin/clientes" element={<AdminLayout><Clientes /></AdminLayout>} />
+            <Route path="/admin/mascotas" element={<AdminLayout><Mascotas /></AdminLayout>} />
             <Route path="/admin/horarios" element={<AdminLayout><Horarios /></AdminLayout>} />
             <Route path="/admin/reportes" element={<AdminLayout><Reports /></AdminLayout>} />
             <Route path="/admin/servicios" element={<AdminLayout><Servicios /></AdminLayout>} />

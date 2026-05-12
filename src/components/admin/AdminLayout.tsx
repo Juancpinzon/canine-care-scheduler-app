@@ -54,7 +54,39 @@ export default function AdminLayout({ children }: Props) {
     navigate('/', { replace: true })
   }
 
-  if (isLoading || !isAuthenticated || !isAdmin) return null
+  if (isLoading) {
+    return (
+      <div style={{ 
+        background: '#080808', 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center', 
+        justifyContent: 'center',
+        fontFamily: 'DM Sans, sans-serif'
+      }}>
+        <div style={{ 
+          width: 40, 
+          height: 40, 
+          border: '3px solid rgba(201,168,76,0.1)', 
+          borderTopColor: '#C9A84C', 
+          borderRadius: '50%',
+          animation: 'q4-spin 1s linear infinite',
+          marginBottom: 16
+        }} />
+        <div style={{ color: '#C9A84C', fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          Cargando panel...
+        </div>
+        <style>{`
+          @keyframes q4-spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated || !isAdmin) return null;
 
   const currentPath = location.pathname
 

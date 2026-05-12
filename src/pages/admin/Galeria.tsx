@@ -151,8 +151,6 @@ export default function AdminGaleria() {
     await reorderPhotos.mutateAsync(updates)
   }
 
-  if (authLoading) return null
-  if (!isAuthenticated || !isAdmin) return null
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'DM Sans, sans-serif', color: C.text }}>
