@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useGalleryPhotos } from "@/hooks/useGallery";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t, LanguageToggle } = useLanguage();
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -17,26 +19,26 @@ export default function LandingPage() {
   const SERVICES = [
     {
       num: "01",
-      badge: "Popular",
-      title: "Full Groom",
-      desc: "Baño, secado profesional, corte según raza, uñas, limpieza de orejas y perfume de larga duración.",
-      price: "Desde $65",
+      badge: t("servicesPopular"),
+      title: t("fullGroom"),
+      desc: t("servicesFullGroom"),
+      price: `${t("servicesFrom")} $65`,
       detail: "XS–XXL · ~2 horas",
     },
     {
       num: "02",
       badge: null,
-      title: "Minigroom",
-      desc: "Baño completo con shampoo premium, secado profesional y arreglo de mantenimiento mensual.",
-      price: "Desde $50",
+      title: t("miniGroom"),
+      desc: t("servicesMinigroom"),
+      price: `${t("servicesFrom")} $50`,
       detail: "XS–XXL · ~1 hora",
     },
     {
       num: "03",
       badge: null,
-      title: "Luxury Bath",
-      desc: "Baño con productos de lujo, mascarilla hidratante para el pelaje y colonia exclusiva.",
-      price: "Desde $45",
+      title: t("luxuryBath"),
+      desc: t("servicesLuxuryBath"),
+      price: `${t("servicesFrom")} $45`,
       detail: "XS–XXL · ~90 min",
     },
   ];
@@ -54,15 +56,15 @@ export default function LandingPage() {
   ];
 
   const STEPS = [
-    { n: "01", t: "Elige el servicio", d: "Selecciona el tratamiento ideal según el tamaño y tipo de pelaje de tu perro." },
-    { n: "02", t: "Elige fecha y hora", d: "Consulta disponibilidad en tiempo real. Sin llamadas, sin WhatsApp, 24/7." },
-    { n: "03", t: "Confirmación inmediata", d: "Recibes confirmación por correo y un recordatorio automático 24 horas antes." },
+    { n: "01", t: t("processStep1Title"), d: t("processStep1Desc") },
+    { n: "02", t: t("processStep2Title"), d: t("processStep2Desc") },
+    { n: "03", t: t("processStep3Title"), d: t("processStep3Desc") },
   ];
 
   const STATS = [
-    { n: "200+", l: "Clientes felices" },
-    { n: "5 ★", l: "Calificación" },
-    { n: "100%", l: "Con amor" },
+    { n: "200+", l: t("statClients") },
+    { n: "5 ★", l: t("statRating") },
+    { n: "100%", l: t("statLove") },
   ];
 
   function GallerySection() {
@@ -74,10 +76,10 @@ export default function LandingPage() {
     return (
       <section id="galeria" style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
         <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: "#C9A84C", textAlign: "center", margin: "0 0 16px" }}>
-          Galería
+          {t("galleryEyebrow")}
         </p>
         <h3 className="q4-serif" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 300, textAlign: "center", lineHeight: 1.15, margin: "0 0 72px" }}>
-          Nuestro Trabajo
+          {t("galleryTitle")}
         </h3>
 
         <div style={{ 
@@ -269,9 +271,9 @@ export default function LandingPage() {
         {/* MOBILE DROPDOWN MENU */}
         <div className={`q4-mobile-menu ${isMenuOpen ? "open" : ""}`}>
           {[
-            { l: "Servicios", id: "servicios" },
-            { l: "Precios", id: "precios" },
-            { l: "Cómo funciona", id: "proceso" },
+            { l: t("services"), id: "servicios" },
+            { l: t("pricing"), id: "precios" },
+            { l: t("howItWorks"), id: "proceso" },
           ].map((x) => (
             <button
               key={x.id}
@@ -309,7 +311,7 @@ export default function LandingPage() {
               cursor: "pointer",
             }}
           >
-            Reservar ahora
+            {t("bookNow")}
           </button>
         </div>
 
@@ -340,9 +342,9 @@ export default function LandingPage() {
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
             <div className="q4-nav-desktop-links">
               {[
-                { l: "Servicios", id: "servicios" },
-                { l: "Precios", id: "precios" },
-                { l: "Cómo funciona", id: "proceso" },
+                { l: t("services"), id: "servicios" },
+                { l: t("pricing"), id: "precios" },
+                { l: t("howItWorks"), id: "proceso" },
               ].map((x) => (
                 <button
                   key={x.id}
@@ -362,23 +364,24 @@ export default function LandingPage() {
                 </button>
               ))}
             </div>
-            <div className="q4-nav-reservar-desktop">
-              <button
-                onClick={() => navigate("/reservar")}
-                style={{
-                  border: "1px solid #C9A84C",
-                  color: "#C9A84C",
-                  background: "transparent",
-                  padding: "9px 22px",
-                  fontSize: 10,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                }}
-              >
-                Reservar
-              </button>
-            </div>
+              <div className="flex items-center gap-4">
+                <LanguageToggle />
+                <button
+                  onClick={() => navigate("/reservar")}
+                  style={{
+                    border: "1px solid #C9A84C",
+                    color: "#C9A84C",
+                    background: "transparent",
+                    padding: "9px 22px",
+                    fontSize: 10,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                  }}
+                >
+                  {t("bookShort")}
+                </button>
+              </div>
           </div>
 
           {/* HAMBURGER — mobile only */}
@@ -417,7 +420,7 @@ export default function LandingPage() {
           >
             <span style={{ width: 6, height: 6, borderRadius: 999, background: "#C9A84C" }} />
             <span style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C9A84C" }}>
-              Peluquería canina de lujo
+              {t("heroBadge")}
             </span>
           </div>
 
@@ -431,9 +434,9 @@ export default function LandingPage() {
               letterSpacing: "-0.01em",
             }}
           >
-            Tu perro merece
+            {t("heroTitle1")}
             <br />
-            <em style={{ color: "#C9A84C", fontWeight: 400 }}>lo extraordinario</em>
+            <em style={{ color: "#C9A84C", fontWeight: 400 }}>{t("heroTitleHighlight")}</em>
           </h2>
 
           <p
@@ -448,7 +451,7 @@ export default function LandingPage() {
               whiteSpace: "pre-line",
             }}
           >
-            {"Servicios de grooming premium en Kissimmee.\nReserva en minutos — sin llamadas, sin esperas."}
+            {t("heroSubtitle")}
           </p>
 
           <div className="q4-reveal q4-d4 q4-hero-btns">
@@ -456,13 +459,13 @@ export default function LandingPage() {
               onClick={() => navigate("/reservar")}
               className="q4-hero-btn-primary"
             >
-              Reservar cita ahora
+              {t("heroBtnPrimary")}
             </button>
             <button
               onClick={() => scrollTo("servicios")}
               className="q4-hero-btn-secondary"
             >
-              Ver servicios
+              {t("heroBtnSecondary")}
             </button>
           </div>
 
@@ -483,10 +486,10 @@ export default function LandingPage() {
         {/* SERVICES */}
         <section id="servicios" style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: "#C9A84C", textAlign: "center", margin: "0 0 16px" }}>
-            Nuestros servicios
+            {t("servicesEyebrow")}
           </p>
           <h3 className="q4-serif" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 300, textAlign: "center", lineHeight: 1.15, margin: "0 0 72px", whiteSpace: "pre-line" }}>
-            {"El estándar más alto\npara tu mejor amigo"}
+            {t("servicesTitle")}
           </h3>
 
           <div id="precios" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
@@ -531,7 +534,7 @@ export default function LandingPage() {
         {/* ADD-ONS */}
         <section style={{ padding: "60px 24px 100px", maxWidth: 1100, margin: "0 auto" }}>
           <p className="q4-serif" style={{ fontSize: 22, textAlign: "center", color: "rgba(240,237,232,0.7)", fontStyle: "italic", margin: "0 0 32px", fontWeight: 300 }}>
-            Servicios adicionales
+            {t("addonsTitle")}
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
             {ADDONS.map((a) => (
@@ -555,10 +558,10 @@ export default function LandingPage() {
         {/* HOW IT WORKS */}
         <section id="proceso" style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto", borderTop: "1px solid rgba(240,237,232,0.06)" }}>
           <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: "#C9A84C", textAlign: "center", margin: "0 0 16px" }}>
-            Proceso
+            {t("processEyebrow")}
           </p>
           <h3 className="q4-serif" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 300, textAlign: "center", lineHeight: 1.15, margin: "0 0 72px", whiteSpace: "pre-line" }}>
-            {"Reservar nunca fue\ntan fácil"}
+            {t("processTitle")}
           </h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 48 }}>
             {STEPS.map((s) => (
@@ -592,10 +595,10 @@ export default function LandingPage() {
             </svg>
           </div>
           <h3 className="q4-serif" style={{ fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 300, margin: "0 0 24px", lineHeight: 1.1 }}>
-            ¿Lista para la <em style={{ color: "#C9A84C" }}>experiencia Q4</em>?
+            {t("ctaTitle1")}<em style={{ color: "#C9A84C" }}>{t("ctaTitleHighlight")}</em>{t("ctaTitle2")}
           </h3>
           <p style={{ fontSize: 14, color: "rgba(240,237,232,0.5)", margin: "0 0 48px", fontWeight: 300, letterSpacing: "0.05em" }}>
-            Tu perro se lo merece · Kissimmee, FL · @q4paws
+            {t("ctaSubtitle")}
           </p>
           <button
             onClick={() => navigate("/reservar")}
@@ -612,7 +615,7 @@ export default function LandingPage() {
               fontWeight: 500,
             }}
           >
-            Reservar mi cita ahora
+            {t("ctaBtn")}
           </button>
         </section>
 
@@ -641,7 +644,7 @@ export default function LandingPage() {
                 padding: 0,
               }}
             >
-              Acceso administrador
+              {t("footerAdmin")}
             </button>
           </div>
         </footer>

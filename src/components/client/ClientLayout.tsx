@@ -3,10 +3,12 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
 
+import { useLanguage } from '@/contexts/LanguageContext'
+
 const NAV_ITEMS = [
-  { path: '/mis-citas',  label: 'Citas',     icon: CalendarIcon },
-  { path: '/mis-perros', label: 'Mis Perros', icon: PawIcon },
-  { path: '/perfil',     label: 'Perfil',    icon: UserIcon },
+  { path: '/mis-citas',  labelKey: 'portalNavAppointments', icon: CalendarIcon },
+  { path: '/mis-perros', labelKey: 'portalNavDogs', icon: PawIcon },
+  { path: '/perfil',     labelKey: 'portalNavProfile', icon: UserIcon },
 ]
 
 function CalendarIcon({ active }: { active: boolean }) {
@@ -49,6 +51,7 @@ export default function ClientLayout({ children }: Props) {
   const { isAuthenticated, isAdmin, isLoading, profile, signOut } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (isLoading) return
@@ -101,12 +104,12 @@ export default function ClientLayout({ children }: Props) {
               Q4 PAWS
             </div>
             <div style={{ fontSize: 10, color: 'rgba(240,237,232,0.35)', marginTop: 4, letterSpacing: '0.05em' }}>
-              {profile?.full_name || 'Portal cliente'}
+              {profile?.full_name || t('portalClient')}
             </div>
           </div>
 
           <nav style={{ flex: 1, paddingTop: 16 }}>
-            {NAV_ITEMS.map(({ path, label, icon: Icon }) => {
+            {NAV_ITEMS.map(({ path, labelKey, icon: Icon }) => {
               const active = currentPath === path
               return (
                 <Link
@@ -116,7 +119,7 @@ export default function ClientLayout({ children }: Props) {
                   style={{ color: active ? '#C9A84C' : 'rgba(240,237,232,0.5)' }}
                 >
                   <Icon active={active} />
-                  {label}
+                  {t(labelKey)}
                 </Link>
               )
             })}
@@ -138,7 +141,7 @@ export default function ClientLayout({ children }: Props) {
                 transition: 'border-color 0.15s, color 0.15s',
               }}
             >
-              Cerrar sesión
+              {t('portalSignOut')}
             </button>
           </div>
         </aside>
@@ -151,7 +154,7 @@ export default function ClientLayout({ children }: Props) {
 
         {/* MOBILE BOTTOM NAV */}
         <nav className="q4-bottom-nav">
-          {NAV_ITEMS.map(({ path, label, icon: Icon }) => {
+          {NAV_ITEMS.map(({ path, labelKey, icon: Icon }) => {
             const active = currentPath === path
             return (
               <Link
@@ -161,7 +164,7 @@ export default function ClientLayout({ children }: Props) {
                 style={{ color: active ? '#C9A84C' : 'rgba(240,237,232,0.35)' }}
               >
                 <Icon active={active} />
-                {label}
+                {t(labelKey)}
               </Link>
             )
           })}
@@ -175,7 +178,7 @@ export default function ClientLayout({ children }: Props) {
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-            Salir
+            {t('portalSignOut')}
           </button>
         </nav>
       </div>

@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useDogs, useCreateDog, useUpdateDog } from '@/hooks/useDogs'
 import { useAppointments } from '@/hooks/useAppointments'
+import { useLanguage } from '@/contexts/LanguageContext'
 import ClientLayout from '@/components/client/ClientLayout'
 import type { Dog, DogSize, DogSex } from '@/types'
 
@@ -327,10 +328,12 @@ function DogAvatar({ dog }: { dog: Dog }) {
 
 export default function MisPerros() {
   const { user } = useAuth()
-  const { data: dogs, isLoading } = useDogs(user?.id)
+  const { t } = useLanguage()
+  const { data: dogs, isLoading } = useDogs(user ? { ownerId: user.id } : undefined)
   const { data: allAppointments } = useAppointments(user ? { clientId: user.id } : undefined)
   const [showForm, setShowForm] = useState(false)
   const [editingDog, setEditingDog] = useState<Dog | undefined>()
+  const [isEditing, setIsEditing] = useState(false)
 
   const appointmentCountByDog = new Map<string, number>()
   if (allAppointments) {
@@ -341,48 +344,46 @@ export default function MisPerros() {
 
   function openAdd() {
     setEditingDog(undefined)
+    setIsEditing(true)
     setShowForm(true)
   }
 
   function openEdit(dog: Dog) {
     setEditingDog(dog)
+    setIsEditing(true)
     setShowForm(true)
   }
 
   function closeForm() {
     setShowForm(false)
+    setIsEditing(false)
     setEditingDog(undefined)
   }
 
   return (
     <ClientLayout>
       <div style={{ maxWidth: 720 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 8, flexWrap: 'wrap', gap: 12 }}>
-          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 34, fontWeight: 400, color: '#F0EDE8', margin: 0 }}>
-            Mis perros
-          </h1>
-          <button
-            onClick={openAdd}
-            style={{
-              background: '#C9A84C',
-              color: '#080808',
-              border: 'none',
-              padding: '10px 22px',
-              fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              cursor: 'pointer',
-              borderRadius: 6,
-              minHeight: 42,
-            }}
-          >
-            + Agregar perro
-          </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 40 }}>
+          <div>
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 34, fontWeight: 400, color: '#F0EDE8', marginBottom: 8 }}>
+              {t('portalNavDogs')}
+            </h1>
+            <p style={{ fontSize: 13, color: 'rgba(240,237,232,0.4)', margin: 0 }}>
+              {t('myDogsSubtitle')}
+            </p>
+          </div>
+          {!isEditing && (
+            <button
+              onClick={openAdd}
+              style={{
+                background: '#C9A84C', color: '#080808', border: 'none', borderRadius: 8,
+                padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              }}
+            >
+              + {t('addDog')}
+            </button>
+          )}
         </div>
-        <p style={{ fontSize: 13, color: 'rgba(240,237,232,0.4)', marginBottom: 32 }}>
-          Gestiona los perfiles de tus mascotas.
-        </p>
 
         {isLoading ? (
           <div style={{ color: 'rgba(240,237,232,0.3)', fontSize: 14 }}>Cargando...</div>
@@ -459,7 +460,7 @@ export default function MisPerros() {
               </svg>
             </div>
             <p style={{ color: 'rgba(240,237,232,0.4)', fontSize: 14, margin: '0 0 20px' }}>
-              Aún no has agregado ningún perro.
+              {t('noDogs')}
             </p>
             <button
               onClick={openAdd}
@@ -476,7 +477,7 @@ export default function MisPerros() {
                 minHeight: 44,
               }}
             >
-              Agregar mi primer perro
+              {t('addYourFirstDog')}
             </button>
           </div>
         )}

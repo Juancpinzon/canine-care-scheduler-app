@@ -11,6 +11,7 @@ import { useAvailability, useBusinessSchedules, useBlockedDates } from '@/hooks/
 import { usePublicBooking } from '@/hooks/usePublicBooking'
 import { getPriceForSize } from '@/types'
 import type { Service, DogSize, DogSex } from '@/types'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
@@ -30,16 +31,14 @@ const C = {
   errorText: '#EF4444',
 }
 
-const SIZES: { value: DogSize; label: string; desc: string }[] = [
-  { value: 'xs',     label: 'Mini / Toy',     desc: 'Chihuahua, Yorkie, Maltés · ≤5 lbs' },
-  { value: 'small',  label: 'Pequeño',         desc: 'Shih Tzu, Poodle mini · 5–20 lbs' },
-  { value: 'medium', label: 'Mediano',          desc: 'Cocker, Beagle, Frenchie · 20–40 lbs' },
-  { value: 'large',  label: 'Grande',           desc: 'Golden, Lab, Husky · 40–70 lbs' },
-  { value: 'xl',     label: 'Extra Grande',     desc: 'Bernés, Boxer · 70–100 lbs' },
-  { value: 'xxl',    label: 'XXL / Gigante',    desc: 'San Bernardo, Gran Danés · 100+ lbs' },
+const SIZES: { value: DogSize; labelKey: string; descKey: string }[] = [
+  { value: 'xs',     labelKey: 'Mini / Toy',     descKey: 'Chihuahua, Yorkie, Maltés · ≤5 lbs' },
+  { value: 'small',  labelKey: 'Pequeño',         descKey: 'Shih Tzu, Poodle mini · 5–20 lbs' },
+  { value: 'medium', labelKey: 'Mediano',          descKey: 'Cocker, Beagle, Frenchie · 20–40 lbs' },
+  { value: 'large',  labelKey: 'Grande',           descKey: 'Golden, Lab, Husky · 40–70 lbs' },
+  { value: 'xl',     labelKey: 'Extra Grande',     descKey: 'Bernés, Boxer · 70–100 lbs' },
+  { value: 'xxl',    labelKey: 'XXL / Gigante',    descKey: 'San Bernardo, Gran Danés · 100+ lbs' },
 ]
-
-const STEPS = ['Servicio', 'Tu perro', 'Fecha y hora', 'Confirmar']
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
 function getMinPrice(svc: Service): number | null {
@@ -144,10 +143,11 @@ function GhostBtn({ children, onClick }: { children: React.ReactNode; onClick: (
 }
 
 // ─── Step indicator ─────────────────────────────────────────────────────────────
-function StepIndicator({ step }: { step: number }) {
+function StepIndicator({ step, t }: { step: number; t: any }) {
+  const steps = [t('step1'), t('step2'), t('step3'), t('confirm')];
   return (
     <div style={{ display: 'flex', gap: 6, padding: '0 0 4px' }}>
-      {STEPS.map((label, i) => {
+      {steps.map((label, i) => {
         const s = i + 1
         const done = s < step
         const active = s === step
@@ -219,6 +219,7 @@ const CALENDAR_CSS = `
 // ─── Main page ──────────────────────────────────────────────────────────────────
 export default function Reservar() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
 
   // ── Wizard state ──
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
@@ -360,15 +361,15 @@ export default function Reservar() {
               Resumen de tu cita
             </div>
             {[
-              { label: 'Servicio', value: selectedService?.name ?? '—' },
-              { label: 'Perro', value: dogName },
+              { label: t('service'), value: selectedService?.name ?? '—' },
+              { label: t('pet'), value: dogName },
               { label: 'Raza', value: dogBreed || '—' },
-              { label: 'Tamaño', value: SIZES.find(s => s.value === dogSize)?.label ?? '—' },
-              { label: 'Fecha', value: selectedDate ? fmtDate(selectedDate) : '—' },
-              { label: 'Hora', value: fmtTime(selectedTime) },
-              { label: 'Duración', value: selectedService ? `${selectedService.duration_minutes} min` : '—' },
-              { label: 'Precio estimado', value: estimatedPrice != null ? `$${estimatedPrice.toFixed(2)}` : '—' },
-              { label: 'Teléfono de contacto', value: ownerPhone },
+              { label: t('petSize'), value: SIZES.find(s => s.value === dogSize)?.labelKey ?? '—' },
+              { label: t('date'), value: selectedDate ? fmtDate(selectedDate) : '—' },
+              { label: t('time'), value: fmtTime(selectedTime) },
+              { label: t('approximate_duration'), value: selectedService ? `${selectedService.duration_minutes} min` : '—' },
+              { label: t('calculated_price'), value: estimatedPrice != null ? `$${estimatedPrice.toFixed(2)}` : '—' },
+              { label: t('phone'), value: ownerPhone },
             ].map(row => (
               <div
                 key={row.label}
@@ -459,15 +460,15 @@ export default function Reservar() {
             Reservar cita
           </div>
         </div>
-        <a href="/" style={{ color: C.textMuted, fontSize: 13, textDecoration: 'none' }}>← Inicio</a>
-      </header>
+          <a href="/" style={{ color: C.textMuted, fontSize: 13, textDecoration: 'none' }}>← {t("home")}</a>
+        </header>
 
-      {/* Content */}
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '28px 16px 120px' }}>
-        {/* Step indicator */}
-        <div style={{ marginBottom: 32 }}>
-          <StepIndicator step={step} />
-        </div>
+        {/* Content */}
+        <div style={{ maxWidth: 600, margin: '0 auto', padding: '28px 16px 120px' }}>
+          {/* Step indicator */}
+          <div style={{ marginBottom: 32 }}>
+            <StepIndicator step={step} t={t} />
+          </div>
 
         {/* ── STEP 1: Servicio ── */}
         {step === 1 && (

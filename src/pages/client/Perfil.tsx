@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import ClientLayout from '@/components/client/ClientLayout'
 import type { PreferredLanguage } from '@/types'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -29,6 +30,7 @@ const labelStyle: React.CSSProperties = {
 
 export default function Perfil() {
   const { profile, updateProfile } = useAuth()
+  const { t } = useLanguage()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [language, setLanguage] = useState<PreferredLanguage>('es')
@@ -63,10 +65,10 @@ export default function Perfil() {
     <ClientLayout>
       <div style={{ maxWidth: 480 }}>
         <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 34, fontWeight: 400, color: '#F0EDE8', marginBottom: 8 }}>
-          Mi perfil
+          {t('myProfile')}
         </h1>
         <p style={{ fontSize: 13, color: 'rgba(240,237,232,0.4)', marginBottom: 40 }}>
-          Actualiza tus datos de contacto.
+          {t('myProfileSubtitle')}
         </p>
 
         <div
@@ -79,7 +81,7 @@ export default function Perfil() {
         >
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
-              <label style={labelStyle}>Nombre completo</label>
+              <label style={labelStyle}>{t('fullName')}</label>
               <input
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -89,7 +91,7 @@ export default function Perfil() {
             </div>
 
             <div>
-              <label style={labelStyle}>Teléfono</label>
+              <label style={labelStyle}>{t('phone')}</label>
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -100,14 +102,14 @@ export default function Perfil() {
             </div>
 
             <div>
-              <label style={labelStyle}>Idioma preferido</label>
+              <label style={labelStyle}>{t('preferredLanguage')}</label>
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as PreferredLanguage)}
                 style={{ ...inputStyle, appearance: 'none' }}
               >
-                <option value="es">Español</option>
-                <option value="en">English</option>
+                <option value="es">{t('spanish')}</option>
+                <option value="en">{t('english')}</option>
               </select>
             </div>
 
@@ -120,7 +122,7 @@ export default function Perfil() {
               }}
             >
               <div style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(240,237,232,0.3)', marginBottom: 6 }}>
-                Email (no editable)
+                {t('emailNotEditable')}
               </div>
               <div style={{ fontSize: 14, color: 'rgba(240,237,232,0.5)' }}>
                 {profile?.id ? '—' : '—'}
@@ -147,7 +149,7 @@ export default function Perfil() {
                 fontFamily: 'DM Sans, sans-serif',
               }}
             >
-              {saving ? 'Guardando...' : 'Guardar cambios'}
+              {saving ? t('saving') : t('saveChanges')}
             </button>
           </form>
         </div>

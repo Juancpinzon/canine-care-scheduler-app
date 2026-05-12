@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { translations } from '../i18n/translations';
 import { Globe } from "lucide-react";
+import { supabase } from '../lib/supabase';
 
 type LanguageContextType = {
   language: string;
@@ -15,8 +16,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Detectar automáticamente el idioma del navegador o usar inglés como predeterminado
   const getBrowserLanguage = (): string => {
-    const browserLang = navigator.language.split('-')[0];
-    return translations[browserLang] ? browserLang : 'en';
+    return 'en'; // Force English by default as requested: "el idioma principal pasa a ser inglés"
   };
 
   const [language, setLanguage] = useState(() => {
@@ -30,7 +30,38 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   useEffect(() => {
     // Guardar la preferencia de idioma
     localStorage.setItem('preferredLanguage', language);
+    
+    // Si hay usuario logueado, sincronizar con Supabase
+    const syncUserLanguage = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await supabase
+          .from('profiles')
+          .update({ preferred_language: language })
+          .eq('id', session.user.id);
+      }
+    };
+    syncUserLanguage();
   }, [language]);
+
+  useEffect(() => {
+    // Cargar preferencia de Supabase al montar si está logueado
+    const loadUserLanguage = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('preferred_language')
+          .eq('id', session.user.id)
+          .single();
+          
+        if (profile?.preferred_language && translations[profile.preferred_language]) {
+          setLanguage(profile.preferred_language);
+        }
+      }
+    };
+    loadUserLanguage();
+  }, []);
 
   const t = (key: string): string => {
     return translations[language][key] || key;
@@ -52,11 +83,14 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return (
       <button 
         onClick={toggleLanguage}
-        className="flex items-center gap-1 py-1 px-2 text-sm rounded-md hover:bg-gray-100"
+        className="flex items-center gap-1 py-1 px-2 text-sm rounded-md hover:bg-gray-800 transition-colors"
         aria-label={language === 'en' ? 'Cambiar a español' : 'Switch to English'}
+        style={{ color: "rgba(240,237,232,0.6)" }}
       >
         <Globe className="h-4 w-4" />
-        <span>{language === 'en' ? 'ES' : 'EN'}</span>
+        <span style={{ fontSize: 11, letterSpacing: "0.1em", fontWeight: 500 }}>
+          {language === 'en' ? 'ES | EN' : 'ES | EN'}
+        </span>
       </button>
     );
   };

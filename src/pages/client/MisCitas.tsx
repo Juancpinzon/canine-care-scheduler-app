@@ -6,14 +6,15 @@ import { useAuth } from '@/hooks/useAuth'
 import { useAppointments, useUpdateAppointmentStatus } from '@/hooks/useAppointments'
 import ClientLayout from '@/components/client/ClientLayout'
 import type { AppointmentStatus, AppointmentWithRelations } from '@/types'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const STATUS_CONFIG: Record<AppointmentStatus, { label: string; bg: string; color: string }> = {
-  pending:     { label: 'Pendiente',   bg: 'rgba(201,168,76,0.14)',  color: '#C9A84C' },
-  confirmed:   { label: 'Confirmada',  bg: 'rgba(34,197,94,0.12)',   color: '#22C55E' },
-  in_progress: { label: 'En curso',    bg: 'rgba(96,165,250,0.12)',  color: '#60A5FA' },
-  completed:   { label: 'Completada',  bg: 'rgba(148,163,184,0.12)', color: '#94A3B8' },
-  cancelled:   { label: 'Cancelada',   bg: 'rgba(239,68,68,0.12)',   color: '#EF4444' },
-  no_show:     { label: 'No asistió',  bg: 'rgba(239,68,68,0.10)',   color: '#F87171' },
+const STATUS_CONFIG: Record<AppointmentStatus, { labelKey: string; bg: string; color: string }> = {
+  pending:     { labelKey: 'statusPending',   bg: 'rgba(201,168,76,0.14)',  color: '#C9A84C' },
+  confirmed:   { labelKey: 'statusConfirmed',  bg: 'rgba(34,197,94,0.12)',   color: '#22C55E' },
+  in_progress: { labelKey: 'statusInProgress',    bg: 'rgba(96,165,250,0.12)',  color: '#60A5FA' },
+  completed:   { labelKey: 'statusCompleted',  bg: 'rgba(148,163,184,0.12)', color: '#94A3B8' },
+  cancelled:   { labelKey: 'statusCancelled',   bg: 'rgba(239,68,68,0.12)',   color: '#EF4444' },
+  no_show:     { labelKey: 'statusNoShow',  bg: 'rgba(239,68,68,0.10)',   color: '#F87171' },
 }
 
 const SIZE_LABELS: Record<string, string> = {
@@ -40,6 +41,7 @@ interface AppointmentCardProps {
 }
 
 function AppointmentCard({ appt, canCancel, onCancel, cancelling }: AppointmentCardProps) {
+  const { t } = useLanguage()
   const s = STATUS_CONFIG[appt.status]
   return (
     <div
@@ -74,7 +76,7 @@ function AppointmentCard({ appt, canCancel, onCancel, cancelling }: AppointmentC
             whiteSpace: 'nowrap',
           }}
         >
-          {s.label}
+          {t(s.labelKey)}
         </span>
       </div>
 
@@ -110,7 +112,7 @@ function AppointmentCard({ appt, canCancel, onCancel, cancelling }: AppointmentC
               minHeight: 40,
             }}
           >
-            {cancelling ? 'Cancelando...' : 'Cancelar cita'}
+            {cancelling ? t('cancelling') : t('cancelAppointment')}
           </button>
         </div>
       )}
@@ -131,6 +133,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 export default function MisCitas() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const { data: appointments, isLoading } = useAppointments(
     user ? { clientId: user.id } : undefined,
   )
@@ -175,10 +178,10 @@ export default function MisCitas() {
     <ClientLayout>
       <div style={{ maxWidth: 720 }}>
         <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 34, fontWeight: 400, color: '#F0EDE8', marginBottom: 8 }}>
-          Mis citas
+          {t('myAppointments')}
         </h1>
         <p style={{ fontSize: 13, color: 'rgba(240,237,232,0.4)', marginBottom: 40 }}>
-          Historial y próximas citas de tu mascota en Q4 Paws.
+          {t('myAppointmentsSubtitle')}
         </p>
 
         {isLoading ? (
@@ -187,7 +190,7 @@ export default function MisCitas() {
           <>
             {/* UPCOMING */}
             <section style={{ marginBottom: 48 }}>
-              <SectionTitle>Próximas</SectionTitle>
+              <SectionTitle>{t('upcomingAppointments')}</SectionTitle>
               {upcoming.length === 0 ? (
                 <div
                   style={{
@@ -200,9 +203,9 @@ export default function MisCitas() {
                     fontSize: 13,
                   }}
                 >
-                  No tienes citas próximas.{' '}
+                  {t('noUpcoming')}{' '}
                   <a href="/reservar" style={{ color: '#C9A84C', textDecoration: 'none' }}>
-                    Reservar una cita →
+                    {t('bookAnAppointment')}
                   </a>
                 </div>
               ) : (
@@ -222,7 +225,7 @@ export default function MisCitas() {
 
             {/* HISTORY */}
             <section>
-              <SectionTitle>Historial</SectionTitle>
+              <SectionTitle>{t('historyAppointments')}</SectionTitle>
               {history.length === 0 ? (
                 <div
                   style={{
@@ -231,7 +234,7 @@ export default function MisCitas() {
                     padding: '16px 0',
                   }}
                 >
-                  Aún no tienes citas completadas.
+                  {t('noHistory')}
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
