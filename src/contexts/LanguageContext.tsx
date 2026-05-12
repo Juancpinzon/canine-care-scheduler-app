@@ -20,8 +20,8 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   const [language, setLanguage] = useState(() => {
-    // Intentar obtener el idioma guardado o detectar del navegador
-    const savedLanguage = localStorage.getItem('preferredLanguage');
+    // Use a new storage key to ignore any old cached 'es' preferences
+    const savedLanguage = localStorage.getItem('q4_lang');
     return savedLanguage && translations[savedLanguage] 
       ? savedLanguage
       : getBrowserLanguage();
@@ -29,7 +29,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   useEffect(() => {
     // Guardar la preferencia de idioma
-    localStorage.setItem('preferredLanguage', language);
+    localStorage.setItem('q4_lang', language);
     
     // Si hay usuario logueado, sincronizar con Supabase
     const syncUserLanguage = async () => {
@@ -83,13 +83,14 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return (
       <button 
         onClick={toggleLanguage}
-        className="flex items-center gap-1 py-1 px-2 text-sm rounded-md hover:bg-gray-800 transition-colors"
+        className="flex items-center gap-1.5 py-1 px-2 rounded-md hover:bg-gray-800 transition-colors"
         aria-label={language === 'en' ? 'Cambiar a español' : 'Switch to English'}
-        style={{ color: "rgba(240,237,232,0.6)" }}
       >
-        <Globe className="h-4 w-4" />
-        <span style={{ fontSize: 11, letterSpacing: "0.1em", fontWeight: 500 }}>
-          {language === 'en' ? 'ES | EN' : 'ES | EN'}
+        <Globe className="h-4 w-4 text-gray-400" />
+        <span style={{ fontSize: 11, letterSpacing: "0.1em", fontWeight: 600 }}>
+          <span style={{ color: language === 'es' ? '#C9A84C' : 'rgba(240,237,232,0.4)', transition: 'color 0.2s' }}>ES</span>
+          <span style={{ color: 'rgba(240,237,232,0.2)', margin: '0 4px' }}>|</span>
+          <span style={{ color: language === 'en' ? '#C9A84C' : 'rgba(240,237,232,0.4)', transition: 'color 0.2s' }}>EN</span>
         </span>
       </button>
     );
