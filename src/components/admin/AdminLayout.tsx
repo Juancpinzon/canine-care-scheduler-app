@@ -11,6 +11,7 @@ import {
   Clock,
   BarChart3,
   LogOut,
+  ExternalLink,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
@@ -78,6 +79,14 @@ export default function AdminLayout({ children }: Props) {
         .q4-admin-nav-link.active { border-left-color: #C9A84C; background: rgba(201,168,76,0.07); color: #C9A84C; }
         .q4-admin-bottom-item { flex: 1; min-width: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; font-size: 9px; letter-spacing: 0.05em; text-transform: uppercase; border: none; background: none; cursor: pointer; padding: 4px 2px; color: rgba(240,237,232,0.35); }
         .q4-admin-bottom-item.active { color: #C9A84C; }
+        .q4-admin-exit-link { 
+          display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 9px 10px; 
+          font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; 
+          border-radius: 6px; font-family: 'DM Sans', sans-serif; transition: all 0.15s; 
+          color: rgba(240,237,232,0.38); border: 1px solid transparent; 
+        }
+        .q4-admin-exit-link:hover { color: #C9A84C; background: rgba(201,168,76,0.05); }
+        .q4-admin-separator { border-top: 1px solid rgba(255,255,255,0.07); margin-top: 8px; padding-top: 8px; }
       `}</style>
 
       <div className="q4-admin-root">
@@ -110,31 +119,42 @@ export default function AdminLayout({ children }: Props) {
             })}
           </nav>
 
-          <div style={{ padding: '0 20px', marginTop: 8 }}>
-            <button
-              onClick={handleSignOut}
-              style={{
-                width: '100%',
-                background: 'none',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(240,237,232,0.35)',
-                padding: '9px 10px',
-                fontSize: 10,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                borderRadius: 6,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 6,
-                fontFamily: 'DM Sans, sans-serif',
-                transition: 'color 0.15s, border-color 0.15s',
-              }}
+          <div style={{ padding: '0 20px', marginTop: 'auto', paddingBottom: 20 }}>
+            <a 
+              href="/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="q4-admin-exit-link"
             >
-              <LogOut size={12} />
-              Salir
-            </button>
+              <ExternalLink size={12} />
+              Ver sitio
+            </a>
+            <div className="q4-admin-separator">
+              <button
+                onClick={handleSignOut}
+                style={{
+                  width: '100%',
+                  background: 'none',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: 'rgba(240,237,232,0.35)',
+                  padding: '9px 10px',
+                  fontSize: 10,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  borderRadius: 6,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  fontFamily: 'DM Sans, sans-serif',
+                  transition: 'color 0.15s, border-color 0.15s',
+                }}
+              >
+                <LogOut size={12} />
+                Salir
+              </button>
+            </div>
           </div>
         </aside>
 
@@ -161,6 +181,16 @@ export default function AdminLayout({ children }: Props) {
               </Link>
             )
           })}
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="q4-admin-bottom-item"
+            style={{ color: 'rgba(240,237,232,0.38)' }}
+          >
+            <ExternalLink size={18} strokeWidth={1.8} />
+            Ver sitio
+          </a>
           <button
             onClick={handleSignOut}
             className="q4-admin-bottom-item"
