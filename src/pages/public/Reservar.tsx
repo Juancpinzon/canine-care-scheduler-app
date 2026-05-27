@@ -31,13 +31,13 @@ const C = {
   errorText: '#EF4444',
 }
 
-const SIZES: { value: DogSize; labelKey: string; descKey: string }[] = [
-  { value: 'xs',     labelKey: 'Mini / Toy',     descKey: 'Chihuahua, Yorkie, Maltés · ≤5 lbs' },
-  { value: 'small',  labelKey: 'Pequeño',         descKey: 'Shih Tzu, Poodle mini · 5–20 lbs' },
-  { value: 'medium', labelKey: 'Mediano',          descKey: 'Cocker, Beagle, Frenchie · 20–40 lbs' },
-  { value: 'large',  labelKey: 'Grande',           descKey: 'Golden, Lab, Husky · 40–70 lbs' },
-  { value: 'xl',     labelKey: 'Extra Grande',     descKey: 'Bernés, Boxer · 70–100 lbs' },
-  { value: 'xxl',    labelKey: 'XXL / Gigante',    descKey: 'San Bernardo, Gran Danés · 100+ lbs' },
+const SIZES: { value: DogSize; label: string; desc: string }[] = [
+  { value: 'xs',     label: 'Mini / Toy',     desc: 'Chihuahua, Yorkie, Maltés · ≤5 lbs' },
+  { value: 'small',  label: 'Pequeño',         desc: 'Shih Tzu, Poodle mini · 5–20 lbs' },
+  { value: 'medium', label: 'Mediano',          desc: 'Cocker, Beagle, Frenchie · 20–40 lbs' },
+  { value: 'large',  label: 'Grande',           desc: 'Golden, Lab, Husky · 40–70 lbs' },
+  { value: 'xl',     label: 'Extra Grande',     desc: 'Bernés, Boxer · 70–100 lbs' },
+  { value: 'xxl',    label: 'XXL / Gigante',    desc: 'San Bernardo, Gran Danés · 100+ lbs' },
 ]
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
@@ -364,7 +364,7 @@ export default function Reservar() {
               { label: t('service'), value: selectedService?.name ?? '—' },
               { label: t('pet'), value: dogName },
               { label: 'Raza', value: dogBreed || '—' },
-              { label: t('petSize'), value: SIZES.find(s => s.value === dogSize)?.labelKey ?? '—' },
+              { label: t('petSize'), value: SIZES.find(s => s.value === dogSize)?.label ?? '—' },
               { label: t('date'), value: selectedDate ? fmtDate(selectedDate) : '—' },
               { label: t('time'), value: fmtTime(selectedTime) },
               { label: t('approximate_duration'), value: selectedService ? `${selectedService.duration_minutes} min` : '—' },
