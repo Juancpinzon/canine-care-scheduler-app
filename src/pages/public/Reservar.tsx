@@ -364,7 +364,7 @@ export default function Reservar() {
               { label: t('service'), value: selectedService?.name ?? '—' },
               { label: t('pet'), value: dogName },
               { label: 'Raza', value: dogBreed || '—' },
-              { label: t('petSize'), value: SIZES.find(s => s.value === dogSize)?.labelKey ?? '—' },
+              { label: t('petSize'), value: SIZES.find(s => s.value === dogSize)?.label ?? '—' },
               { label: t('date'), value: selectedDate ? fmtDate(selectedDate) : '—' },
               { label: t('time'), value: fmtTime(selectedTime) },
               { label: t('approximate_duration'), value: selectedService ? `${selectedService.duration_minutes} min` : '—' },
