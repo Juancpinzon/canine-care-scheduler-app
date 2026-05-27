@@ -63,11 +63,19 @@ export type Database = {
         Row: {
           after_photo_url: string | null
           before_photo_url: string | null
-          client_id: string
+          client_id: string | null
           created_at: string
-          dog_id: string
+          dog_id: string | null
           duration_minutes: number
           groomer_notes: string | null
+          guest_dog_breed: string | null
+          guest_dog_name: string | null
+          guest_dog_neutered: boolean | null
+          guest_dog_sex: string | null
+          guest_dog_size: string | null
+          guest_email: string | null
+          guest_name: string | null
+          guest_phone: string | null
           id: string
           notes_admin: string | null
           notes_client: string | null
@@ -83,11 +91,19 @@ export type Database = {
         Insert: {
           after_photo_url?: string | null
           before_photo_url?: string | null
-          client_id: string
+          client_id?: string | null
           created_at?: string
-          dog_id: string
+          dog_id?: string | null
           duration_minutes: number
           groomer_notes?: string | null
+          guest_dog_breed?: string | null
+          guest_dog_name?: string | null
+          guest_dog_neutered?: boolean | null
+          guest_dog_sex?: string | null
+          guest_dog_size?: string | null
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_phone?: string | null
           id?: string
           notes_admin?: string | null
           notes_client?: string | null
@@ -103,11 +119,19 @@ export type Database = {
         Update: {
           after_photo_url?: string | null
           before_photo_url?: string | null
-          client_id?: string
+          client_id?: string | null
           created_at?: string
-          dog_id?: string
+          dog_id?: string | null
           duration_minutes?: number
           groomer_notes?: string | null
+          guest_dog_breed?: string | null
+          guest_dog_name?: string | null
+          guest_dog_neutered?: boolean | null
+          guest_dog_sex?: string | null
+          guest_dog_size?: string | null
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_phone?: string | null
           id?: string
           notes_admin?: string | null
           notes_client?: string | null
@@ -280,6 +304,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      gallery_photos: {
+        Row: {
+          caption: string | null
+          created_at: string | null
+          id: string
+          is_visible: boolean | null
+          photo_url: string
+          sort_order: number | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          photo_url: string
+          sort_order?: number | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          photo_url?: string
+          sort_order?: number | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
