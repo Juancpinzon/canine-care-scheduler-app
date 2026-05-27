@@ -329,7 +329,7 @@ function DogAvatar({ dog }: { dog: Dog }) {
 export default function MisPerros() {
   const { user } = useAuth()
   const { t } = useLanguage()
-  const { data: dogs, isLoading } = useDogs(user ? { ownerId: user.id } : undefined)
+  const { data: dogs, isLoading } = useDogs(user?.id)
   const { data: allAppointments } = useAppointments(user ? { clientId: user.id } : undefined)
   const [showForm, setShowForm] = useState(false)
   const [editingDog, setEditingDog] = useState<Dog | undefined>()

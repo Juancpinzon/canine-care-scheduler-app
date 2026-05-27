@@ -79,10 +79,12 @@ export function useUpdateAppointmentPhotos() {
         .from('appointment-photos')
         .getPublicUrl(path)
 
-      const field = type === 'before' ? 'before_photo_url' : 'after_photo_url'
+      const update = type === 'before'
+        ? { before_photo_url: publicUrl }
+        : { after_photo_url: publicUrl }
       const { error: updateError } = await supabase
         .from('appointments')
-        .update({ [field]: publicUrl })
+        .update(update)
         .eq('id', appointmentId)
       if (updateError) throw updateError
 
